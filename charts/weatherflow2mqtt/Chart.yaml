@@ -1,0 +1,27 @@
+---
+apiVersion: v2
+attributes:
+  artifacthub.io/links: |
+    - name: Chart Source
+      url: https://github.com/retsamedoc/helm-charts
+    - name: Common library chart definition
+      url: https://github.com/bjw-s/helm-charts/blob/main/charts/library/common/Chart.yaml
+  catalog.cattle.io/display-name: Weatherflow to MQTT Bridge
+  catalog.cattle.io/permits-os: linux
+
+icon: https://avatars.githubusercontent.com/u/605023?s=200&v=4
+name: weatherflow2mqtt
+description: WeatherFlow to MQTT for Home Assistant
+version: 0.1.0
+
+sources:
+  - https://github.com/briis/hass-weatherflow2mqtt
+
+maintainers:
+  - name: Zach Schimke
+    email: retsamedoc@digitalactionsproject.org
+
+dependencies:
+  - name: common
+    repository: https://bjw-s.github.io/helm-charts
+    version: 1.3.2
