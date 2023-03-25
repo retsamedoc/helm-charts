@@ -18,15 +18,15 @@ image:
 env:
   # -- Set the container timezone
   TZ: "Europe/Copenhagen"
-  # -- unit system used when displaying the values, either imperial or metric.
+  # -- Set the unit system used when displaying the values, either imperial or metric.
   UNIT_SYSTEM: "metric"
-  # -- language for Wind Direction cardinals and other sensors with text strings as state value
+  # -- Set the language for Wind Direction cardinals and other sensors with text strings as state value
   LANGUAGE: "en"
-  # -- override when the wind speed and bearing is updated. Default is 0 (as soon as possible)
+  # -- Override when the wind speed and bearing is updated. Default is 0 (as soon as possible)
   RAPID_WIND_INTERVAL: "0"
-  # -- enable more debug data in the Container Log. 
+  # -- Enable more debug data in the Container Log. 
   DEBUG: "False"
-  # -- hight above sea level for where the station is placed. This is used when calculating some of the sensor values. Station elevation plus Device height above ground. The value has to be in meters (meters = feet * 0.3048).
+  # -- Set the hight above sea level for where the station is placed. This is used when calculating some of the sensor values. Station elevation plus Device height above ground. The value has to be in meters (meters = feet * 0.3048).
   ELEVATION: "0"
   # --  Latitude where the Station is located.
   LATITUDE: "00.0000"
