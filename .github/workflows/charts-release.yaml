@@ -46,8 +46,8 @@ jobs:
           for i in "${CHARTS[@]}"
           do
               IFS='/' read -r -a chart_parts <<< "$i"
-              if [ -f "charts/${chart_parts[0]}"/"${chart_parts[1]}/Chart.yaml" ]; then
-                ./.github/scripts/gen-helm-docs.sh "${chart_parts[0]}" "${chart_parts[1]}"
+              if [ -f "charts/"${chart_parts[0]}"/Chart.yaml" ]; then
+                ./.github/scripts/gen-helm-docs.sh "${chart_parts[0]}"
               fi
           done
 
@@ -65,9 +65,9 @@ jobs:
         id: save-commit-hash
         run: |
           if [ "${{ steps.create-commit.outputs.changes_detected || 'unknown' }}" == "true" ]; then
-            echo '::set-output name=commit_hash::${{ steps.create-commit.outputs.commit_hash }}'
+            echo 'commit_hash=${{ steps.create-commit.outputs.commit_hash }}'  >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=commit_hash::${GITHUB_SHA}"
+            echo "commit_hash=${GITHUB_SHA}"  >> $GITHUB_OUTPUT
           fi
 
       - name: Checkout
