@@ -12,7 +12,7 @@ attributes:
 icon: https://avatars.githubusercontent.com/u/605023?s=200&v=4
 name: weatherflow2mqtt
 description: WeatherFlow to MQTT for Home Assistant
-version: 0.1.0
+version: 0.1.1
 
 sources:
   - https://github.com/briis/hass-weatherflow2mqtt
