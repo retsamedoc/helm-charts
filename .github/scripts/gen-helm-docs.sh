@@ -2,7 +2,7 @@
 set -eu
 
 # Generate helm-docs for Helm charts
-# Usage ./gen-helm-docs.sh [stable/incubator] [chart]
+# Usage ./gen-helm-docs.sh [chart]
 
 # require helm-docs
 command -v helm-docs >/dev/null 2>&1 || {
