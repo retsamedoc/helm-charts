@@ -113,7 +113,7 @@ jobs:
           ./.github/scripts/gen-chart-summary.sh
 
       - name: Create Commit
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v4.7.2
         with:
           push_options: --force
           commit_message: Auto-generate chart summary [no ci]
