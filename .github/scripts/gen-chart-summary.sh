@@ -19,7 +19,7 @@ echo "# Helm charts overview" > "${charts_summary_file}"
 
 echo "| Chart | Description |" >> "${charts_summary_file}"
 echo "| ----- | ----------- |" >> "${charts_summary_file}"
-for i in ${stable_charts[@]}
+for i in ${charts[@]}
 do
     chart_data=($(yq eval '.name, .description' "$i"))
     chart_name="${chart_data[0]}"
