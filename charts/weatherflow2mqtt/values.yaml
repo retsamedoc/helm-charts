@@ -5,7 +5,6 @@
 # https://github.com/bjw-s/helm-charts/blob/main/charts/library/common/values.yaml
 #
 
-
 image:
   # -- image repository
   repository:  briis/weatherflow2mqtt
