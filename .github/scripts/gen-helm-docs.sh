@@ -21,7 +21,7 @@ readme_config_template="${repository}/template/README_CONFIG.md.gotmpl"
 charts=$(find "${repository}" -name "Chart.yaml")
 
 # Allow for a specific chart to be passed in as a argument
-if [ $# -ge 1 ] && [ -n "$1" ] ; then
+if [ -n "$1" ] ; then
     charts="${repository}/charts/$1/Chart.yaml"
     root="$(dirname "${charts}")"
     if [ ! -f "$charts" ]; then
