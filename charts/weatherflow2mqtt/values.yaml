@@ -18,23 +18,28 @@ image:
 env:
   # -- Set the container timezone
   TZ: "Europe/Copenhagen"
-  # -- Set the unit system used when displaying the values, either imperial or metric.
+  # -- Set the unit system used
+  # Set this to either imperial or metric.
   UNIT_SYSTEM: "metric"
   # -- Set the language for Wind Direction cardinals and other sensors with text strings as state value
   LANGUAGE: "en"
-  # -- Override when the wind speed and bearing is updated. Default is 0 (as soon as possible)
+  # -- Override when the wind speed and bearing is updated.
+  # Default is 0 (as soon as possible)
   RAPID_WIND_INTERVAL: "0"
   # -- Enable more debug data in the Container Log. 
   DEBUG: "False"
-  # -- Set the hight above sea level for where the station is placed. This is used when calculating some of the sensor values. Station elevation plus Device height above ground. The value has to be in meters (meters = feet * 0.3048).
+  # -- Set the hight above sea level for where the station is placed. This is used when calculating some of the sensor values and should be the station elevation plus device height above ground.
+  # The value has to be in meters (meters = feet * 0.3048).
   ELEVATION: "0"
   # --  Latitude where the Station is located.
   LATITUDE: "00.0000"
   # -- Longitude where the Station is located.
   LONGITUDE: "000.0000"
-  # -- All Time Low Sea Level Pressure. Default is 960 (Mb for Metric) or Default is 28.35 (inHG for Imperial) 
+  # -- All Time Low Sea Level Pressure. 
+  # Default is 960 (Mb for Metric) or Default is 28.35 (inHG for Imperial) 
   ZAMBRETTI_MIN_PRESSURE: "960"
-  # -- All Time High Sea Level Pressure. Default is 1060 (Mb for Metric) or Default is 31.30 (inHG for Imperial)
+  # -- All Time High Sea Level Pressure.
+  # Default is 1060 (Mb for Metric) or Default is 31.30 (inHG for Imperial)
   ZAMBRETTI_MAX_PRESSURE: "1060"
   # -- Host IP used to connect to the weatherflow device. Only change if you have a goofy network setup
   WF_HOST: "0.0.0.0"
@@ -56,7 +61,8 @@ env:
   STATION_TOKEN:
   # -- retrieve Forecast Data from WeatherFlow. If set to True, STATION_ID and STATION_TOKEN must be filled also. NOTE If this is enabled the component will access the Internet to get the Forecast data.
   ADD_FORECAST: False
-  # -- interval in minutes, between updates of the Forecast data. Default value is 30 minutes.
+  # -- interval in minutes, between updates of the Forecast data.
+  # Default value is 30 minutes.
   FORECAST_INTERVAL: "30"
 
 persistence:
