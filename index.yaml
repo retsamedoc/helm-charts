@@ -1,5 +1,35 @@
 apiVersion: v1
 entries:
+  esphome:
+  - annotations:
+      artifacthub.io/changes: |-
+        - kind: changed
+          description: Upgraded `common` chart dependency to version 4.5.2
+    apiVersion: v2
+    appVersion: 2024.3.0
+    created: "2024-04-03T22:58:49.153294221Z"
+    dependencies:
+    - name: common
+      repository: https://library-charts.k8s-at-home.com
+      version: 4.5.2
+    description: ESPHome is a system to control your ESP8266/ESP32 by simple yet powerful
+      configuration files and control them remotely through Home Automation sys
+    digest: aa4b4475d8d8d94fbd389040cd15ad779cadfef02b47d2ee7fb416f804033dad
+    home: https://github.com/retsamedoc/helm-charts/tree/main/charts/esphome
+    icon: https://raw.githubusercontent.com/esphome/esphome-docs/v1.16.2/_static/favicon-256x256.png
+    keywords:
+    - esphome
+    - home-automation
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: retsamedoc@digitalactionsproject.org
+      name: Zach Schimke
+    name: esphome
+    sources:
+    - https://github.com/esphome/esphome
+    urls:
+    - https://github.com/retsamedoc/helm-charts/releases/download/esphome-9.0.0/esphome-9.0.0.tgz
+    version: 9.0.0
   weatherflow2mqtt:
   - apiVersion: v2
     created: "2023-03-25T23:28:23.473218988Z"
@@ -19,4 +49,4 @@ entries:
     urls:
     - https://github.com/retsamedoc/helm-charts/releases/download/weatherflow2mqtt-0.1.2/weatherflow2mqtt-0.1.2.tgz
     version: 0.1.2
-generated: "2023-03-25T23:28:23.473229388Z"
+generated: "2024-04-03T22:58:49.339771893Z"
