@@ -1,0 +1,39 @@
+---
+apiVersion: v2
+attributes:
+  artifacthub.io/links: |
+    - name: Chart Source
+      url: https://github.com/retsamedoc/helm-charts
+    - name: Common library chart definition
+      url: https://github.com/bjw-s/helm-charts/blob/main/charts/library/common/Chart.yaml
+  catalog.cattle.io/display-name: ESPHome
+  catalog.cattle.io/permits-os: linux
+
+home: https://github.com/retsamedoc/helm-charts/tree/main/charts/esphome
+icon: https://raw.githubusercontent.com/esphome/esphome-docs/v1.16.2/_static/favicon-256x256.png
+description: ESPHome is a system to control your ESP8266/ESP32 by simple yet powerful configuration files and control them remotely through Home Automation sys
+name: esphome
+version: 9.0.0
+appVersion: 2024.3.0
+kubeVersion: ">=1.16.0-0"
+
+keywords:
+  - esphome
+  - home-automation
+
+sources:
+  - https://github.com/esphome/esphome
+
+maintainers:
+  - name: Zach Schimke
+    email: retsamedoc@digitalactionsproject.org
+
+dependencies:
+  - name: common
+    repository: https://library-charts.k8s-at-home.com
+    version: 4.5.2
+
+annotations:
+  artifacthub.io/changes: |-
+    - kind: changed
+      description: Upgraded `common` chart dependency to version 4.5.2
