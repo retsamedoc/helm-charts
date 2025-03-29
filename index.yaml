@@ -81,6 +81,40 @@ entries:
     urls:
     - https://github.com/retsamedoc/helm-charts/releases/download/retrom-0.0.1/retrom-0.0.1.tgz
     version: 0.0.1
+  romm:
+  - apiVersion: v2
+    appVersion: 3.8.1
+    created: "2025-03-29T23:27:48.74918528Z"
+    dependencies:
+    - name: common
+      repository: https://library-charts.k8s-at-home.com
+      version: 4.5.2
+    - condition: mariadb.enabled
+      name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      version: 20.4.2
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 20.11.4
+    description: A beautiful, powerful, self-hosted rom manager and player.
+    digest: 1af199ba7f3cefedb9ad2956d3a8b8a5fef49a7bafe5caea355d8172bff33c8f
+    home: https://github.com/retsamedoc/helm-charts/tree/main/charts/romm
+    icon: https://romm.app/_ipx/q_80/images/blocks/logos/romm.svg
+    keywords:
+    - romm
+    - rom-manager
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: retsamedoc@digitalactionsproject.org
+      name: Zach Schimke
+    name: romm
+    sources:
+    - https://github.com/rommapp/romm
+    - https://github.com/retsamedoc/helm-charts/tree/main/charts/romm
+    urls:
+    - https://github.com/retsamedoc/helm-charts/releases/download/romm-2025.3.0/romm-2025.3.0.tgz
+    version: 2025.3.0
   weatherflow2mqtt:
   - apiVersion: v2
     created: "2023-03-25T23:28:23.473218988Z"
@@ -100,4 +134,4 @@ entries:
     urls:
     - https://github.com/retsamedoc/helm-charts/releases/download/weatherflow2mqtt-0.1.2/weatherflow2mqtt-0.1.2.tgz
     version: 0.1.2
-generated: "2025-03-29T20:04:17.786397506Z"
+generated: "2025-03-29T23:27:48.749215135Z"
