@@ -33,6 +33,31 @@ entries:
   retrom:
   - apiVersion: v2
     appVersion: 0.7.14
+    created: "2025-03-29T20:04:17.78638369Z"
+    dependencies:
+    - name: common
+      repository: https://library-charts.k8s-at-home.com
+      version: 4.3.0
+    description: A centralized game library/collection management service with a focus
+      on emulation
+    digest: 1b608b58ab5f4338ec1b7b001730aec71f4fe994235550ca8d4792ae68e49205
+    home: https://github.com/retsamedoc/helm-charts/tree/main/charts/retrom
+    icon: https://raw.githubusercontent.com/JMBeresford/retrom/refs/heads/main/packages/client/icons/icon.png
+    keywords:
+    - retrom
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: retsamedoc@digitalactionsproject.org
+      name: Zach Schimke
+    name: retrom
+    sources:
+    - https://github.com/JMBeresford/retrom
+    - https://github.com/retsamedoc/helm-charts/tree/main/charts/retrom
+    urls:
+    - https://github.com/retsamedoc/helm-charts/releases/download/retrom-2025.3.0/retrom-2025.3.0.tgz
+    version: 2025.3.0
+  - apiVersion: v2
+    appVersion: 0.7.14
     created: "2025-03-29T17:56:57.242520153Z"
     dependencies:
     - name: common
@@ -75,4 +100,4 @@ entries:
     urls:
     - https://github.com/retsamedoc/helm-charts/releases/download/weatherflow2mqtt-0.1.2/weatherflow2mqtt-0.1.2.tgz
     version: 0.1.2
-generated: "2025-03-29T17:56:57.242530162Z"
+generated: "2025-03-29T20:04:17.786397506Z"
