@@ -1,0 +1,35 @@
+apiVersion: v2
+appVersion: 3.8.1
+description: A beautiful, powerful, self-hosted rom manager and player.
+name: romm
+version: 2025.3.0
+kubeVersion: ">=1.16.0-0"
+keywords:
+  - romm
+  - rom-manager
+home: https://github.com/retsamedoc/helm-charts/tree/main/charts/romm
+icon: https://romm.app/_ipx/q_80/images/blocks/logos/romm.svg
+sources:
+  - https://github.com/rommapp/romm
+  - https://github.com/retsamedoc/helm-charts/tree/main/charts/romm
+maintainers:
+  - name: Zach Schimke
+    email: retsamedoc@digitalactionsproject.org
+dependencies:
+  - name: common
+    repository: https://library-charts.k8s-at-home.com
+    version: 4.5.2
+  - name: mariadb
+    version: 20.4.2
+    repository: oci://registry-1.docker.io/bitnamicharts/mariadb
+    condition: mariadb.enabled
+    alias: ""
+    tags: []
+    import-values: []
+  - name: redis
+    version: 20.11.4
+    repository: oci://registry-1.docker.io/bitnamicharts/redis
+    condition: redis.enabled
+    alias: ""
+    tags: []
+    import-values: []

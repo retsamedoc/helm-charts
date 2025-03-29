@@ -1,0 +1,133 @@
+#
+# IMPORTANT NOTE
+#
+# This chart inherits from our common library chart. You can check the default values/options here:
+# https://github.com/k8s-at-home/library-charts/tree/main/charts/stable/common/values.yaml
+#
+
+image:
+  # -- image repository
+  repository: ghcr.io/rommapp/romm
+  # -- image tag
+  # The specific digest is for the `amd64` image, but arm compatible images are also available.
+  tag: 3.8@sha256:9a732c9efb4ea70d6cc5818c7d732a4a990fd06b3e1e90600023459942270463
+  # -- image pull policy
+  pullPolicy: IfNotPresent
+
+# -- environment variables.
+# @default -- See below
+env:
+  # dont touch!
+  ROMM_BASE_PATH: /romm
+  ROMM_HOST: localhost
+  # -- Set the container timezone
+  TZ: UTC
+
+  # IGDB client id and secret (not required but recommended to set)
+  IGDB_CLIENT_ID: ""
+  IGDB_CLIENT_SECRET: ""
+
+  # optional api
+  # STEAMGRIDDB_API_KEY: ""
+  
+  # paid API only (optional)
+  # MOBYGAMES_API_KEY: ""
+
+  # Disables playing in browser with EmulatorJS (builtin)
+  # DISABLE_EMULATOR_JS: false
+  
+  # Disables playing flash games with RuffleRS (builtin)
+  # DISABLE_RUFFLE_RS: false
+  
+  # Disables CSRF protection (not recommended)
+  # DISABLE_CSRF_PROTECTION: false
+  
+  # Disable auth on download endpoint (WebRcade, Tinfoil)
+  # DISABLE_DOWNLOAD_ENDPOINT_AUTH: false
+
+  # Timeout for the background scan/rescan tasks (in seconds)
+  # SCAN_TIMEOUT: 14400
+
+  # Enable rescanning of library when filesystem changes
+  # ENABLE_RESCAN_ON_FILESYSTEM_CHANGE: false
+  
+  # Delay in minutes before rescanning library when filesystem changes
+  # RESCAN_ON_FILESYSTEM_CHANGE_DELAY: 5
+  
+  # Cron expression for scheduled rescanning
+  # SCHEDULED_RESCAN_CRON: "0 3 * * *"
+
+  # Enable scheduled updating of Switch TitleDB index
+  # ENABLE_SCHEDULED_UPDATE_SWITCH_TITLEDB: false
+
+  # Cron expression for scheduled updating of Switch TitleDB
+  # SCHEDULED_UPDATE_SWITCH_TITLEDB_CRON: "0 4 * * *"
+
+  # Enable scheduled updating of MAME XML index
+  # ENABLE_SCHEDULED_UPDATE_MAME_XML: false
+
+  # Cron expression for scheduled updating of MAME XML
+  # SCHEDULED_UPDATE_MAME_XML_CRON: "0 5 * * *"
+
+  DB_PORT: 3306
+  DB_NAME: "{{ .Values.mariadb.mariadbDatabase }}"
+  DB_USER: "{{ .Values.mariadb.mariadbUsername }}"
+  DB_HOST:
+    secretKeyRef:
+      expandObjectName: false
+      name: '{{ printf "%s-%s" .Release.Name "mariadbcreds" }}'
+      key: plainhost
+  DB_PASSWD: "{{ .Values.mariadb.password }}"
+  REDIS_HOST:
+    secretKeyRef:
+      expandObjectName: false
+      name: '{{ printf "%s-%s" .Release.Name "rediscreds" }}'
+      key: plainhost
+  REDIS_PASSWORD: "{{ .Values.redis.password }}"
+  REDIS_PORT: 6379
+  ROMM_AUTH_SECRET_KEY:
+    secretKeyRef:
+      name: romm-secrets
+      key: ROMM_AUTH_SECRET_KEY
+
+# -- Configures service settings for the chart. Normally this does not need to be modified.
+# @default -- See values.yaml
+service:
+  main:
+    ports:
+      main:
+        protocol: http
+        targetPort: 8080
+        port: 10680
+
+ingress:
+  # -- Enable and configure ingress settings for the chart under this key.
+  # @default -- See values.yaml
+  main:
+    enabled: false
+    hosts:
+      - host: romm.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls:
+      - hosts:
+          - romm.local
+        secretName: tls-romm-ingress
+
+# -- Configure persistence settings for the chart under this key.
+# @default -- See values.yaml
+persistence:
+  assets:
+    enabled: true
+    mountPath: /romm/assets
+  config:
+    enabled: true
+    mountPath: /romm/config
+  library:
+    enabled: true
+    mountPath: /romm/library
+  resources:
+    enabled: true
+    mountPath: /romm/resources
+
