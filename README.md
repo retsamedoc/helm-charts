@@ -1,3 +1,5 @@
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/retsamedoc)](https://artifacthub.io/packages/search?repo=retsamedoc)
+
 ## Usage
 
 [Helm](https://helm.sh) must be installed to use the charts.  Please refer to
