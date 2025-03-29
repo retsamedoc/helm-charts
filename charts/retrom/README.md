@@ -78,7 +78,7 @@ helm install retrom retsamedoc/retrom -f values.yaml
 | env.TZ | string | `"UTC"` | Set the container timezone |
 | image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | image.repository | string | `"ghcr.io/jmberesford/retrom-service"` | image repository |
-| image.tag | string | `"latest"` | image tag The specific digest is for the `amd64` image, but arm compatible images are also available. |
+| image.tag | string | `"retrom-v0.7.14"` | image tag The specific digest is for the `amd64` image, but arm compatible images are also available. |
 | ingress.main | object | See values.yaml | Enable and configure ingress settings for the chart under this key. |
 | persistence | object | See values.yaml | Configure persistence settings for the chart under this key. |
 | service | object | See values.yaml | Configures service settings for the chart. Normally this does not need to be modified. |
