@@ -21,14 +21,14 @@ dependencies:
     version: 4.5.2
   - name: mariadb
     version: 20.4.2
-    repository: oci://registry-1.docker.io/bitnamicharts/mariadb
+    repository: https://charts.bitnami.com/bitnami
     condition: mariadb.enabled
     alias: ""
     tags: []
     import-values: []
   - name: redis
     version: 20.11.4
-    repository: oci://registry-1.docker.io/bitnamicharts/redis
+    repository: https://charts.bitnami.com/bitnami
     condition: redis.enabled
     alias: ""
     tags: []
