@@ -84,8 +84,9 @@ jobs:
           
       - name: Add Helm dependency repos
         run: |
-          helm repo add k8s-at-home-library https://library-charts.k8s-at-home.com
-          helm repo update
+          for dir in $(ls -d charts/*/); do
+            helm dependency list  --max-col-width 120 $dir 2> /dev/null | tail +2 | head -n -1 | awk '{ print "helm repo add " $1 " " $3 }' | while read cmd; do $cmd; done
+          done
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.5.0
