@@ -10,7 +10,7 @@ image:
   repository: ghcr.io/jmberesford/retrom-service
   # -- image tag
   # The specific digest is for the `amd64` image, but arm compatible images are also available.
-  tag: latest
+  tag: retrom-v0.7.14
   # -- image pull policy
   pullPolicy: IfNotPresent
 
@@ -42,6 +42,15 @@ ingress:
   # @default -- See values.yaml
   main:
     enabled: false
+    hosts:
+      - host: retrom.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls:
+      - hosts:
+          - retrom.local
+        secretName: tls-retrom-ingress
 
 # -- Configure persistence settings for the chart under this key.
 # @default -- See values.yaml
