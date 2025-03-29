@@ -86,7 +86,6 @@ jobs:
         run: |
           helm repo add k8s-at-home-library https://library-charts.k8s-at-home.com
           helm repo update
-          helm dependency build
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.5.0
