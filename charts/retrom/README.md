@@ -1,6 +1,6 @@
 # retrom
 
-![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![AppVersion: 0.7.14](https://img.shields.io/badge/AppVersion-0.7.14-informational?style=flat-square)
+![Version: 2025.3.0](https://img.shields.io/badge/Version-2025.3.0-informational?style=flat-square) ![AppVersion: 0.7.14](https://img.shields.io/badge/AppVersion-0.7.14-informational?style=flat-square)
 
 A centralized game library/collection management service with a focus on emulation
 
@@ -78,7 +78,7 @@ helm install retrom retsamedoc/retrom -f values.yaml
 | env.TZ | string | `"UTC"` | Set the container timezone |
 | image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | image.repository | string | `"ghcr.io/jmberesford/retrom-service"` | image repository |
-| image.tag | string | `"latest"` | image tag The specific digest is for the `amd64` image, but arm compatible images are also available. |
+| image.tag | string | `"retrom-v0.7.14"` | image tag The specific digest is for the `amd64` image, but arm compatible images are also available. |
 | ingress.main | object | See values.yaml | Enable and configure ingress settings for the chart under this key. |
 | persistence | object | See values.yaml | Configure persistence settings for the chart under this key. |
 | service | object | See values.yaml | Configures service settings for the chart. Normally this does not need to be modified. |
