@@ -19,9 +19,9 @@ Kubernetes: `>=1.16.0-0`
 
 | Repository | Name | Version |
 |------------|------|---------|
+| https://charts.bitnami.com/bitnami | mariadb | 20.4.2 |
+| https://charts.bitnami.com/bitnami | redis | 20.11.4 |
 | https://library-charts.k8s-at-home.com | common | 4.5.2 |
-| oci://registry-1.docker.io/bitnamicharts/mariadb | mariadb | 20.4.2 |
-| oci://registry-1.docker.io/bitnamicharts/redis | redis | 20.11.4 |
 
 ## TL;DR
 
