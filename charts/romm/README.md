@@ -1,6 +1,6 @@
 # romm
 
-![Version: 2025.3.0](https://img.shields.io/badge/Version-2025.3.0-informational?style=flat-square) ![AppVersion: 3.8.1](https://img.shields.io/badge/AppVersion-3.8.1-informational?style=flat-square)
+![Version: 2025.3.1](https://img.shields.io/badge/Version-2025.3.1-informational?style=flat-square) ![AppVersion: 3.8.1](https://img.shields.io/badge/AppVersion-3.8.1-informational?style=flat-square)
 
 A beautiful, powerful, self-hosted rom manager and player.
 
