@@ -1,15 +1,14 @@
-# retrom
+# juicepassproxy
 
-![Version: 2026.2.3](https://img.shields.io/badge/Version-2026.2.3-informational?style=flat-square) ![AppVersion: 0.7.14](https://img.shields.io/badge/AppVersion-0.7.14-informational?style=flat-square)
+![Version: 2026.2.2](https://img.shields.io/badge/Version-2026.2.2-informational?style=flat-square) ![AppVersion: 0.5.1](https://img.shields.io/badge/AppVersion-0.5.1-informational?style=flat-square)
 
-A centralized game library/collection management service with a focus on emulation
+Proxy UDP requests to/from Juicebox EV chargers to MQTT discoverable by Home Assistant
 
 **This chart is not maintained by the upstream project and any issues with the chart should be raised [here](https://github.com/retsamedoc/helm-charts/issues/new/choose)**
 
 ## Source Code
 
-* <https://github.com/JMBeresford/retrom>
-* <https://github.com/retsamedoc/helm-charts/tree/main/charts/retrom>
+* <https://github.com/JuiceRescue/juicepassproxy>
 
 ## Requirements
 
@@ -26,23 +25,23 @@ Kubernetes: `>=1.16.0-0`
 ```console
 helm repo add retsamedoc https://retsamedoc.github.io.com/helm-charts/
 helm repo update
-helm install retrom retsamedoc/retrom
+helm install juicepassproxy retsamedoc/juicepassproxy
 ```
 
 ## Installing the Chart
 
-To install the chart with the release name `retrom`
+To install the chart with the release name `juicepassproxy`
 
 ```console
-helm install retrom retsamedoc/retrom
+helm install juicepassproxy retsamedoc/juicepassproxy
 ```
 
 ## Uninstalling the Chart
 
-To uninstall the `retrom` deployment
+To uninstall the `juicepassproxy` deployment
 
 ```console
-helm uninstall retrom
+helm uninstall juicepassproxy
 ```
 
 The command removes all the Kubernetes components associated with the chart **including persistent volumes** and deletes the release.
@@ -55,18 +54,20 @@ Other values may be used from the [values.yaml](https://github.com/bjw-s/helm-ch
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 
 ```console
-helm install retrom \
+helm install juicepassproxy \
   --set env.TZ="America/New York" \
-    retsamedoc/retrom
+    retsamedoc/juicepassproxy
 ```
 
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart.
 
 ```console
-helm install retrom retsamedoc/retrom -f values.yaml
+helm install juicepassproxy retsamedoc/juicepassproxy -f values.yaml
 ```
 
 ## Custom configuration
+
+N/A
 
 ## Values
 
@@ -77,10 +78,8 @@ helm install retrom retsamedoc/retrom -f values.yaml
 | env | object | See below | environment variables. |
 | env.TZ | string | `"UTC"` | Set the container timezone |
 | image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
-| image.repository | string | `"ghcr.io/jmberesford/retrom-service"` | image repository |
-| image.tag | string | `"retrom-v0.7.14"` | image tag The specific digest is for the `amd64` image, but arm compatible images are also available. |
-| ingress.main | object | See values.yaml | Enable and configure ingress settings for the chart under this key. |
-| persistence | object | See values.yaml | Configure persistence settings for the chart under this key. |
+| image.repository | string | `"ghcr.io/juicerescue/juicepassproxy"` | image repository |
+| image.tag | string | `"0.5.1"` | image tag |
 | service | object | See values.yaml | Configures service settings for the chart. Normally this does not need to be modified. |
 
 ## Support

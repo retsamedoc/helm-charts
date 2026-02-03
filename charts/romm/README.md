@@ -1,6 +1,6 @@
 # romm
 
-![Version: 2025.3.1](https://img.shields.io/badge/Version-2025.3.1-informational?style=flat-square) ![AppVersion: 3.8.1](https://img.shields.io/badge/AppVersion-3.8.1-informational?style=flat-square)
+![Version: 2026.2.3](https://img.shields.io/badge/Version-2026.2.3-informational?style=flat-square) ![AppVersion: 3.8.1](https://img.shields.io/badge/AppVersion-3.8.1-informational?style=flat-square)
 
 A beautiful, powerful, self-hosted rom manager and player.
 
@@ -19,9 +19,9 @@ Kubernetes: `>=1.16.0-0`
 
 | Repository | Name | Version |
 |------------|------|---------|
+| https://bjw-s-labs.github.io/helm-charts | common | 4.6.2 |
 | https://charts.bitnami.com/bitnami | mariadb | 20.4.2 |
 | https://charts.bitnami.com/bitnami | redis | 20.11.4 |
-| https://library-charts.k8s-at-home.com | common | 4.5.2 |
 
 ## TL;DR
 

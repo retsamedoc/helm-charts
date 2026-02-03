@@ -16,7 +16,7 @@ WeatherFlow to MQTT for Home Assistant
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://library-charts.k8s-at-home.com | common | 4.5.2 |
+| https://bjw-s-labs.github.io/helm-charts | common | 4.6.2 |
 
 ## TL;DR
 
