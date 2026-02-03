@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: 3.8.1
 description: A beautiful, powerful, self-hosted rom manager and player.
 name: romm
-version: 2025.3.1
+version: 2026.2.3
 kubeVersion: ">=1.16.0-0"
 keywords:
   - romm
@@ -17,8 +17,8 @@ maintainers:
     email: retsamedoc@digitalactionsproject.org
 dependencies:
   - name: common
-    repository: https://library-charts.k8s-at-home.com
-    version: 4.5.2
+    repository: https://bjw-s-labs.github.io/helm-charts
+    version: 4.6.2
   - name: mariadb
     version: 20.4.2
     repository: https://charts.bitnami.com/bitnami
@@ -33,3 +33,10 @@ dependencies:
     alias: ""
     tags: []
     import-values: []
+
+annotations:
+  artifacthub.io/changes: |-
+    - kind: changed
+      description: |-
+        Upgraded the common library to v4.6.2
+

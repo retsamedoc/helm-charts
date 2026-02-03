@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: 0.7.14
 description: A centralized game library/collection management service with a focus on emulation
 name: retrom
-version: 2025.3.0
+version: 2026.2.3
 kubeVersion: ">=1.16.0-0"
 keywords:
   - retrom
@@ -16,5 +16,10 @@ maintainers:
     email: retsamedoc@digitalactionsproject.org
 dependencies:
   - name: common
-    repository: https://library-charts.k8s-at-home.com
-    version: 4.3.0
+    repository: https://bjw-s-labs.github.io/helm-charts
+    version: 4.6.2
+annotations:
+  artifacthub.io/changes: |-
+    - kind: changed
+      description: |-
+        Upgraded the common library to v4.6.2

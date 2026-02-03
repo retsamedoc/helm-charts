@@ -5,7 +5,7 @@ attributes:
     - name: Chart Source
       url: https://github.com/retsamedoc/helm-charts
     - name: Common library chart definition
-      url: https://github.com/bjw-s/helm-charts/blob/main/charts/library/common/Chart.yaml
+      url: https://github.com/bjw-s-labs/helm-charts/blob/main/charts/library/common/Chart.yaml
   catalog.cattle.io/display-name: Weatherflow to MQTT Bridge
   catalog.cattle.io/permits-os: linux
 
@@ -23,5 +23,5 @@ maintainers:
 
 dependencies:
   - name: common
-    repository: https://library-charts.k8s-at-home.com
-    version: 4.5.2
+    repository: https://bjw-s-labs.github.io/helm-charts
+    version: 4.6.2
