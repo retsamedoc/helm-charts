@@ -5,37 +5,44 @@
 # https://github.com/bjw-s-labs/helm-charts/blob/main/charts/library/common/values.yaml
 #
 
-image:
-  # -- image repository
-  repository: ghcr.io/juicerescue/juicepassproxy
-  # -- image tag
-  tag: 0.5.1
-  # -- image pull policy
-  pullPolicy: IfNotPresent
+controllers:
+  main:
+    strategy: Recreate
 
-# -- environment variables.
-# @default -- See below
-env:
-  # -- Set the container timezone
-  TZ: UTC
+    containers:
+      main:
+        image:
+          # -- image repository
+          repository: ghcr.io/juicerescue/juicepassproxy
+          # -- image tag
+          tag: 0.5.1
+          # -- image pull policy
+          pullPolicy: IfNotPresent
 
-  # If defined, will attempt to get the EnelX Server Name, IP, and Port using telnet
-  #JUICEBOX_HOST: ""
+        # -- environment variables.
+        # @default -- See below
+        env:
+          # -- Set the container timezone
+          TZ: UTC
 
-  # Continually update the JuiceBox via telnet to point to JuicePass Proxy.
-  #UPDATE_UDPC: true
+          # If defined, will attempt to get the EnelX Server Name, IP, and Port using telnet
+          #JUICEBOX_HOST: ""
 
-  # This is the IP or Hostname of the machine where JuicePass Proxy is running (required if UPDATE_UDPC is set)
-  #JPP_HOST: ""
+          # Continually update the JuiceBox via telnet to point to JuicePass Proxy.
+          #UPDATE_UDPC: true
 
-  MQTT_HOST: ""
-  MQTT_USER: ""
-  MQTT_PASS: ""
+          # This is the IP or Hostname of the machine where JuicePass Proxy is running (required if UPDATE_UDPC is set)
+          #JPP_HOST: ""
+
+          MQTT_HOST: ""
+          MQTT_USER: ""
+          MQTT_PASS: ""
 
 # -- Configures service settings for the chart. Normally this does not need to be modified.
 # @default -- See values.yaml
 service:
   main:
+    controller: main
     ports:
       main:
         targetPort: 8047
