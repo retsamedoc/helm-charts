@@ -1,0 +1,38 @@
+---
+apiVersion: v2
+attributes:
+  artifacthub.io/links: |
+    - name: Chart Source
+      url: https://github.com/retsamedoc/helm-charts
+    - name: Common library chart definition
+      url: https://github.com/bjw-s-labs/helm-charts/blob/main/charts/library/common/Chart.yaml
+  catalog.cattle.io/display-name: JuicePassProxy
+  catalog.cattle.io/permits-os: linux
+
+home: https://github.com/retsamedoc/helm-charts/tree/main/charts/juicepassproxy
+icon: https://retsamedoc.github.io/helm-charts/logos/juicepass.png
+description: Proxy UDP requests to/from Juicebox EV chargers to MQTT discoverable by Home Assistant
+name: juicepassproxy
+version: 2026.2.2
+appVersion: 0.5.1
+kubeVersion: ">=1.16.0-0"
+
+keywords:
+  - home-automation
+
+sources:
+  - https://github.com/JuiceRescue/juicepassproxy
+
+maintainers:
+  - name: Zach Schimke
+    email: retsamedoc@digitalactionsproject.org
+
+dependencies:
+  - name: common
+    repository: https://bjw-s-labs.github.io/helm-charts
+    version: 4.6.2
+
+annotations:
+  artifacthub.io/changes: |-
+    - kind: changed
+      description: Upgraded `common` chart dependency to version 4.6.2
