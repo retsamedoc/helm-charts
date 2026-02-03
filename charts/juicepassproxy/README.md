@@ -1,6 +1,6 @@
 # juicepassproxy
 
-![Version: 2026.2.3](https://img.shields.io/badge/Version-2026.2.3-informational?style=flat-square) ![AppVersion: 0.5.1](https://img.shields.io/badge/AppVersion-0.5.1-informational?style=flat-square)
+![Version: 2026.2.3a](https://img.shields.io/badge/Version-2026.2.3a-informational?style=flat-square) ![AppVersion: 0.5.1](https://img.shields.io/badge/AppVersion-0.5.1-informational?style=flat-square)
 
 Proxy UDP requests to/from Juicebox EV chargers to MQTT discoverable by Home Assistant
 
@@ -75,11 +75,12 @@ N/A
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| env | object | See below | environment variables. |
-| env.TZ | string | `"UTC"` | Set the container timezone |
-| image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
-| image.repository | string | `"ghcr.io/juicerescue/juicepassproxy"` | image repository |
-| image.tag | string | `"0.5.1"` | image tag |
+| controllers.main.containers.main.env | object | See below | environment variables. |
+| controllers.main.containers.main.env.TZ | string | `"UTC"` | Set the container timezone |
+| controllers.main.containers.main.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
+| controllers.main.containers.main.image.repository | string | `"ghcr.io/juicerescue/juicepassproxy"` | image repository |
+| controllers.main.containers.main.image.tag | string | `"0.5.1"` | image tag |
+| controllers.main.strategy | string | `"Recreate"` |  |
 | service | object | See values.yaml | Configures service settings for the chart. Normally this does not need to be modified. |
 
 ## Support
