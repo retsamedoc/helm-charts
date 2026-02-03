@@ -1,6 +1,6 @@
 # juicepassproxy
 
-![Version: 2026.2.2](https://img.shields.io/badge/Version-2026.2.2-informational?style=flat-square) ![AppVersion: 0.5.1](https://img.shields.io/badge/AppVersion-0.5.1-informational?style=flat-square)
+![Version: 2026.2.3](https://img.shields.io/badge/Version-2026.2.3-informational?style=flat-square) ![AppVersion: 0.5.1](https://img.shields.io/badge/AppVersion-0.5.1-informational?style=flat-square)
 
 Proxy UDP requests to/from Juicebox EV chargers to MQTT discoverable by Home Assistant
 
