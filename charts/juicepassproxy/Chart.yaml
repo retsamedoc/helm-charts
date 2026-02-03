@@ -13,7 +13,7 @@ home: https://github.com/retsamedoc/helm-charts/tree/main/charts/juicepassproxy
 icon: https://retsamedoc.github.io/helm-charts/logos/juicepass.png
 description: Proxy UDP requests to/from Juicebox EV chargers to MQTT discoverable by Home Assistant
 name: juicepassproxy
-version: 2026.2.2
+version: 2026.2.3
 appVersion: 0.5.1
 kubeVersion: ">=1.16.0-0"
 
