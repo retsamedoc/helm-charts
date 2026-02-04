@@ -68,6 +68,35 @@ entries:
             Upgraded the common library to v4.6.2
     apiVersion: v2
     appVersion: 0.5.1
+    created: "2026-02-04T17:26:59.380292262Z"
+    dependencies:
+    - name: common
+      repository: https://bjw-s-labs.github.io/helm-charts
+      version: 4.6.2
+    description: Proxy UDP requests to/from Juicebox EV chargers to MQTT discoverable
+      by Home Assistant
+    digest: 107f18709eaf6207e4a305efb086ede8c083cb2d8cd92ebdfac84a4c39714dfb
+    home: https://github.com/retsamedoc/helm-charts/tree/main/charts/juicepassproxy
+    icon: https://retsamedoc.github.io/helm-charts/logos/juicepass.png
+    keywords:
+    - home-automation
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: retsamedoc@digitalactionsproject.org
+      name: Zach Schimke
+    name: juicepassproxy
+    sources:
+    - https://github.com/JuiceRescue/juicepassproxy
+    urls:
+    - https://github.com/retsamedoc/helm-charts/releases/download/juicepassproxy-2026.2.4/juicepassproxy-2026.2.4.tgz
+    version: 2026.2.4
+  - annotations:
+      artifacthub.io/changes: |-
+        - kind: changed
+          description: |-
+            Upgraded the common library to v4.6.2
+    apiVersion: v2
+    appVersion: 0.5.1
     created: "2026-02-03T20:32:00.656878253Z"
     dependencies:
     - name: common
@@ -324,4 +353,4 @@ entries:
     urls:
     - https://github.com/retsamedoc/helm-charts/releases/download/weatherflow2mqtt-0.1.2/weatherflow2mqtt-0.1.2.tgz
     version: 0.1.2
-generated: "2026-02-03T20:32:01.56277236Z"
+generated: "2026-02-04T17:26:59.380327676Z"
