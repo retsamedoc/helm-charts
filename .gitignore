@@ -1,0 +1,14 @@
+# IDE / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Helm dependency packages (Chart.lock is committed)
+charts/*/charts/*.tgz
+
+# Local tooling
+.direnv/
+.mise.local.toml

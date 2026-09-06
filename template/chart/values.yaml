@@ -1,0 +1,20 @@
+# -- Placeholder values for a new chart. Replace image and ports.
+controllers:
+  main:
+    strategy: Recreate
+    containers:
+      main:
+        image:
+          repository: ghcr.io/example/CHART_NAME
+          tag: "0.0.0"
+          pullPolicy: IfNotPresent
+        env:
+          TZ: UTC
+
+service:
+  main:
+    controller: main
+    ports:
+      main:
+        port: 8080
+        targetPort: 8080

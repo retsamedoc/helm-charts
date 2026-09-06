@@ -16,39 +16,44 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           ref: ${{ inputs.checkoutCommit }}
 
-      - name: Install Kubernetes tools
-        uses: yokawasa/action-setup-kube-tools@v0.8.2
+      - name: Install Helm
+        uses: azure/setup-helm@v5
         with:
-          setup-tools: |
-            helmv3
-          helm: "3.8.0"
+          version: v3.16.4
 
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v6
         with:
-          python-version: "3.10"
+          python-version: "3.12"
 
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.3.0
+        uses: helm/chart-testing-action@v2.6.1
 
       - name: Collect changes
         id: list-changed
         if: inputs.chartChangesDetected == 'true'
         run: |
+          set -euo pipefail
           EXCLUDED=$(yq eval -o=json '.excluded-charts // []' .github/ct-lint.yaml)
           CHARTS=$(ct list-changed --config .github/ct-lint.yaml)
-          CHARTS_JSON=$(echo "${CHARTS}" | jq -R -s -c 'split("\n")[:-1]')
+          if [[ -z "${CHARTS}" ]]; then
+            echo "charts=[]" >> "$GITHUB_OUTPUT"
+            echo "detected=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          CHARTS_JSON=$(echo "${CHARTS}" | jq -R -s -c 'split("\n")|map(select(length>0))')
           OUTPUT_JSON=$(echo "{\"excluded\": ${EXCLUDED}, \"all\": ${CHARTS_JSON}}" | jq -c '.all-.excluded')
-          echo ::set-output name=charts::${OUTPUT_JSON}
-          if [[ $(echo ${OUTPUT_JSON} | jq -c '. | length') -gt 0 ]]; then
-            echo "::set-output name=detected::true"
+          echo "charts=${OUTPUT_JSON}" >> "$GITHUB_OUTPUT"
+          if [[ $(echo "${OUTPUT_JSON}" | jq -c '. | length') -gt 0 ]]; then
+            echo "detected=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "detected=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Run chart-testing (lint)
-        id: lint
         if: steps.list-changed.outputs.detected == 'true'
         run: ct lint --config .github/ct-lint.yaml

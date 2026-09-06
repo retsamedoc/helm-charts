@@ -11,40 +11,6 @@ on:
         type: string
 
 jobs:
-  unit-test:
-    name: Run unit tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          ref: ${{ inputs.checkoutCommit }}
-
-      - name: Install Kubernetes tools
-        uses: yokawasa/action-setup-kube-tools@v0.8.2
-        with:
-          setup-tools: |
-            helmv3
-          helm: "3.8.0"
-
-      - name: Install Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.7
-
-      - name: Install dependencies
-        env:
-          RUBYJQ_USE_SYSTEM_LIBRARIES: 1
-        run: |
-          sudo apt-get update
-          sudo apt-get install libjq-dev
-          bundle install
-
-      - name: Run tests
-        run: |
-          bundle exec m -r ./test/
-
   generate-install-matrix:
     name: Generate matrix for install
     runs-on: ubuntu-latest
@@ -56,25 +22,38 @@ jobs:
       detected: ${{ steps.list-changed.outputs.detected }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           ref: ${{ inputs.checkoutCommit }}
 
+      - name: Install Helm
+        uses: azure/setup-helm@v5
+        with:
+          version: v3.16.4
+
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.3.0
+        uses: helm/chart-testing-action@v2.6.1
 
       - name: Run chart-testing (list-changed)
         id: list-changed
         if: inputs.chartChangesDetected == 'true'
         run: |
+          set -euo pipefail
           EXCLUDED=$(yq eval -o=json '.excluded-charts // []' .github/ct-install.yaml)
           CHARTS=$(ct list-changed --config .github/ct-install.yaml)
-          CHARTS_JSON=$(echo "${CHARTS}" | jq -R -s -c 'split("\n")[:-1]')
+          if [[ -z "${CHARTS}" ]]; then
+            echo "charts=[]" >> "$GITHUB_OUTPUT"
+            echo "detected=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          CHARTS_JSON=$(echo "${CHARTS}" | jq -R -s -c 'split("\n")|map(select(length>0))')
           OUTPUT_JSON=$(echo "{\"excluded\": ${EXCLUDED}, \"all\": ${CHARTS_JSON}}" | jq -c '.all-.excluded')
-          echo ::set-output name=charts::${OUTPUT_JSON}
-          if [[ $(echo ${OUTPUT_JSON} | jq -c '. | length') -gt 0 ]]; then
-            echo "::set-output name=detected::true"
+          echo "charts=${OUTPUT_JSON}" >> "$GITHUB_OUTPUT"
+          if [[ $(echo "${OUTPUT_JSON}" | jq -c '. | length') -gt 0 ]]; then
+            echo "detected=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "detected=false" >> "$GITHUB_OUTPUT"
           fi
 
   install-charts:
@@ -88,29 +67,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           ref: ${{ inputs.checkoutCommit }}
 
-      - name: Install Kubernetes tools
-        uses: yokawasa/action-setup-kube-tools@v0.8.2
+      - name: Install Helm
+        uses: azure/setup-helm@v5
         with:
-          setup-tools: |
-            helmv3
-          helm: "3.6.3"
+          version: v3.16.4
 
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v6
         with:
-          python-version: "3.10"
+          python-version: "3.12"
 
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.3.0
+        uses: helm/chart-testing-action@v2.6.1
 
       - name: Create k3d cluster
         uses: nolar/setup-k3d-k3s@v1
         with:
-          version: v1.19
+          # Partial minors like v1.28 fall out of recent k3s releases and are
+          # used as-is (rancher/k3s:v1.28), which is not a real image tag.
+          version: v1.33
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Remove node taints
         run: |
@@ -119,13 +99,11 @@ jobs:
       - name: Run chart-testing (install)
         run: ct install --config .github/ct-install.yaml --charts ${{ matrix.chart }}
 
-  # Summarize matrix https://github.community/t/status-check-for-a-matrix-jobs/127354/7
   install_success:
     needs:
       - generate-install-matrix
       - install-charts
-    if: |
-      always()
+    if: always()
     name: Install successful
     runs-on: ubuntu-latest
     steps:

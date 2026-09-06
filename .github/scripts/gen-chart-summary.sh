@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
 # require yq
 command -v yq >/dev/null 2>&1 || {
@@ -7,22 +7,20 @@ command -v yq >/dev/null 2>&1 || {
     exit 1
 }
 
-# Absolute path of repository
 repository=$(git rev-parse --show-toplevel)
 charts_folder="${repository}/charts"
-charts_summary_file="${charts_folder}"/README.md
+charts_summary_file="${charts_folder}/README.md"
 
-# Gather all charts using the common library, excluding common-test
-charts=$(find "${charts_folder}" -name "Chart.yaml" | sort)
+mapfile -t chart_files < <(find "${charts_folder}" -mindepth 2 -maxdepth 2 -name "Chart.yaml" | sort)
 
-echo "# Helm charts overview" > "${charts_summary_file}"
-
-echo "| Chart | Description |" >> "${charts_summary_file}"
-echo "| ----- | ----------- |" >> "${charts_summary_file}"
-for i in ${charts[@]}
-do
-    chart_data=($(yq eval '.name, .description' "$i"))
-    chart_name="${chart_data[0]}"
-    chart_description="${chart_data[@]:1}"
-    echo "| [${chart_name}]/${chart_name}) | ${chart_description} |" >> "${charts_summary_file}"
-done
+{
+  echo "# Helm charts overview"
+  echo ""
+  echo "| Chart | Description |"
+  echo "| ----- | ----------- |"
+  for chart_file in "${chart_files[@]}"; do
+    chart_name=$(yq eval '.name' "${chart_file}")
+    chart_description=$(yq eval '.description' "${chart_file}")
+    echo "| [${chart_name}](${chart_name}/) | ${chart_description} |"
+  done
+} > "${charts_summary_file}"

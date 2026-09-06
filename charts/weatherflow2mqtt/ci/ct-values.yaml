@@ -1,0 +1,9 @@
+# Minimal overrides for chart-testing install
+env:
+  TZ: UTC
+  MQTT_HOST: mqtt.example.local
+  MQTT_PORT: "1883"
+  MQTT_USERNAME: ""
+  MQTT_PASSWORD: ""
+  STATION_ID: "00000"
+  TOKEN: "ci-token"

@@ -1,0 +1,15 @@
+# Minimal overrides for chart-testing install.
+# The real app exits without JuiceBox/EnelX endpoints; keep a sleeping
+# container so CI validates render + deploy, not runtime MQTT/UDP.
+controllers:
+  main:
+    containers:
+      main:
+        command:
+          - sleep
+          - infinity
+        env:
+          TZ: UTC
+service:
+  main:
+    controller: main

@@ -1,6 +1,8 @@
 name: "Charts: Release"
 
-concurrency: helm-release
+concurrency:
+  group: helm-release
+  cancel-in-progress: false
 
 on:
   workflow_dispatch:
@@ -10,50 +12,76 @@ on:
     paths:
       - "charts/**"
 
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      - name: Install Kubernetes tools
-        uses: yokawasa/action-setup-kube-tools@v0.8.2
+      - name: Require signing secrets
+        env:
+          HELM_GPG_PRIVATE_KEY: ${{ secrets.HELM_GPG_PRIVATE_KEY }}
+          HELM_GPG_KEY_NAME: ${{ secrets.HELM_GPG_KEY_NAME }}
+          HELM_GPG_FINGERPRINT: ${{ secrets.HELM_GPG_FINGERPRINT }}
+        run: |
+          set -euo pipefail
+          missing=0
+          for v in HELM_GPG_PRIVATE_KEY HELM_GPG_KEY_NAME HELM_GPG_FINGERPRINT; do
+            if [[ -z "${!v}" ]]; then
+              echo "::error::Missing required secret: ${v}"
+              missing=1
+            fi
+          done
+          if [[ "$missing" -ne 0 ]]; then
+            echo "Signing is required. See SIGNING.md"
+            exit 1
+          fi
+
+      - name: Install Helm
+        uses: azure/setup-helm@v5
         with:
-          setup-tools: |
-            helmv3
-            yq
-          helm: "3.8.0"
-          yq: "4.16.2"
+          version: v3.16.4
+
+      - name: Install yq
+        uses: mikefarah/yq@v4.44.6
 
       - name: Install helm-docs
         run: |
-          wget -O /tmp/helm-docs.deb  https://github.com/norwoodj/helm-docs/releases/download/v1.11.0/helm-docs_1.11.0_Linux_x86_64.deb
+          set -euo pipefail
+          curl -fsSL -o /tmp/helm-docs.deb \
+            https://github.com/norwoodj/helm-docs/releases/download/v1.14.2/helm-docs_1.14.2_Linux_x86_64.deb
           sudo dpkg -i /tmp/helm-docs.deb
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3.7.0
 
       - name: Collect changes
         id: collect-changes
         uses: ./.github/actions/collect-changes
 
       - name: Generate README for changed charts
-        if: |
-          steps.collect-changes.outputs.changesDetected == 'true'
+        if: steps.collect-changes.outputs.changesDetected == 'true'
         run: |
+          set -euo pipefail
           CHARTS=(${{ steps.collect-changes.outputs.addedOrModifiedCharts }})
-          for i in "${CHARTS[@]}"
-          do
-              IFS='/' read -r -a chart_parts <<< "$i"
-              if [ -f "charts/"${chart_parts[0]}"/Chart.yaml" ]; then
-                ./.github/scripts/gen-helm-docs.sh "${chart_parts[0]}"
-              fi
+          for i in "${CHARTS[@]}"; do
+            if [[ -f "charts/${i}/Chart.yaml" ]]; then
+              ./.github/scripts/gen-helm-docs.sh "${i}"
+            fi
           done
 
       - name: Create commit
         id: create-commit
-        uses: stefanzweifel/git-auto-commit-action@v4.7.2
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           file_pattern: charts/**/
           commit_message: "chore: Auto-update chart README [skip ci]"
@@ -64,14 +92,14 @@ jobs:
       - name: Save commit hash
         id: save-commit-hash
         run: |
-          if [ "${{ steps.create-commit.outputs.changes_detected || 'unknown' }}" == "true" ]; then
-            echo 'commit_hash=${{ steps.create-commit.outputs.commit_hash }}'  >> $GITHUB_OUTPUT
+          if [[ "${{ steps.create-commit.outputs.changes_detected || 'false' }}" == "true" ]]; then
+            echo "commit_hash=${{ steps.create-commit.outputs.commit_hash }}" >> "$GITHUB_OUTPUT"
           else
-            echo "commit_hash=${GITHUB_SHA}"  >> $GITHUB_OUTPUT
+            echo "commit_hash=${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout release commit
+        uses: actions/checkout@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ steps.save-commit-hash.outputs.commit_hash }}
@@ -81,20 +109,105 @@ jobs:
         run: |
           git config user.name "bishop[bot]"
           git config user.email "bishop[bot]@users.noreply.github.com"
-          
-      - name: Add Helm dependency repos
+
+      - name: Import GPG signing key
+        env:
+          HELM_GPG_PRIVATE_KEY: ${{ secrets.HELM_GPG_PRIVATE_KEY }}
+          HELM_GPG_PASSPHRASE: ${{ secrets.HELM_GPG_PASSPHRASE }}
+          HELM_GPG_FINGERPRINT: ${{ secrets.HELM_GPG_FINGERPRINT }}
         run: |
-          for dir in $(ls -d charts/*/); do
-            helm dependency list  --max-col-width 120 $dir 2> /dev/null | tail +2 | head -n -1 | awk '{ print "helm repo add " $1 " " $3 }' | while read cmd; do $cmd; done
+          set -euo pipefail
+          mkdir -p "${HOME}/.gnupg"
+          chmod 700 "${HOME}/.gnupg"
+          printf '%s\n' "${HELM_GPG_PRIVATE_KEY}" | gpg --batch --import
+          # Helm --sign expects a classic keyring path
+          gpg --batch --yes --export-secret-keys "${HELM_GPG_FINGERPRINT}" > "${HOME}/secring.gpg"
+          gpg --armor --export "${HELM_GPG_FINGERPRINT}" > /tmp/pgp-public-key.asc
+          echo "GNUPGHOME=${HOME}/.gnupg" >> "$GITHUB_ENV"
+          echo "CR_KEYRING_PATH=${HOME}/secring.gpg" >> "$GITHUB_ENV"
+
+      - name: Build chart dependencies
+        run: |
+          set -euo pipefail
+          for dir in charts/*/; do
+            [[ -f "${dir}/Chart.yaml" ]] || continue
+            # Chart.lock requires locally registered repos for helm dependency build
+            while IFS=$'\t' read -r name repo; do
+              [[ -n "${name}" && -n "${repo}" && "${repo}" != "null" ]] || continue
+              helm repo add "${name}" "${repo}" --force-update
+            done < <(yq eval -r '.dependencies[]? | [.name, .repository] | @tsv' "${dir}/Chart.yaml")
+            helm dependency build "${dir}"
           done
 
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.5.0
+        uses: helm/chart-releaser-action@v1.6.0
         with:
           charts_dir: charts
+          packages_with_index: true
         env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CR_SKIP_EXISTING: "true"
+          CR_KEY: ${{ secrets.HELM_GPG_KEY_NAME }}
+          CR_KEYRING: ${{ env.CR_KEYRING_PATH }}
+          CR_PASSPHRASE: ${{ secrets.HELM_GPG_PASSPHRASE }}
+          CR_SIGN: "true"
+
+      - name: Publish Pages metadata (pubkey, artifacthub-repo, logos)
+        run: |
+          set -euo pipefail
+          work=$(mktemp -d)
+          git clone --branch gh-pages --single-branch \
+            "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" \
+            "${work}"
+          cp /tmp/pgp-public-key.asc "${work}/pgp-public-key.asc"
+          cp artifacthub-repo.yml "${work}/artifacthub-repo.yml"
+          mkdir -p "${work}/logos"
+          if [[ -d logos ]]; then
+            cp -a logos/. "${work}/logos/" || true
+          fi
+          git -C "${work}" add pgp-public-key.asc artifacthub-repo.yml logos || true
+          if git -C "${work}" diff --cached --quiet; then
+            echo "No Pages metadata changes"
+          else
+            git -C "${work}" commit -m "chore: sync Pages metadata (pubkey, artifacthub-repo, logos)"
+            git -C "${work}" push origin gh-pages
+          fi
+
+      - name: Push charts to OCI and cosign sign
+        env:
+          HELM_EXPERIMENTAL_OCI: "1"
+        run: |
+          set -euo pipefail
+          echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u "${{ github.actor }}" --password-stdin
+          shopt -s nullglob
+          packages=(.cr-release-packages/*.tgz)
+          if [[ ${#packages[@]} -eq 0 ]]; then
+            echo "No new packages to push to OCI"
+            exit 0
+          fi
+          for tgz in "${packages[@]}"; do
+            base=$(basename "${tgz}" .tgz)
+            name=""
+            version=""
+            for d in charts/*/; do
+              [[ -f "${d}/Chart.yaml" ]] || continue
+              cname=$(yq eval '.name' "${d}/Chart.yaml")
+              cver=$(yq eval '.version' "${d}/Chart.yaml")
+              if [[ "${cname}-${cver}" == "${base}" ]]; then
+                name="$cname"
+                version="$cver"
+                break
+              fi
+            done
+            if [[ -z "$name" ]]; then
+              echo "::warning::Could not map package ${base} to a chart; skipping OCI push"
+              continue
+            fi
+            echo "Pushing ${name}:${version}"
+            helm push "${tgz}" "oci://ghcr.io/${{ github.repository_owner }}/charts"
+            cosign sign --yes \
+              "ghcr.io/${{ github.repository_owner }}/charts/${name}:${version}"
+          done
 
   generate-summary:
     name: Auto-generate charts summary
@@ -103,26 +216,22 @@ jobs:
       - release
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: main
           fetch-depth: 0
 
       - name: Install yq
-        uses: chrisdickinson/setup-yq@latest
-        with:
-          yq-version: v4.9.3
+        uses: mikefarah/yq@v4.44.6
 
       - name: Run script
-        run: |
-          ./.github/scripts/gen-chart-summary.sh
+        run: ./.github/scripts/gen-chart-summary.sh
 
       - name: Create Commit
-        uses: stefanzweifel/git-auto-commit-action@v4.7.2
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          push_options: --force
-          commit_message: Auto-generate chart summary [no ci]
+          commit_message: "chore: Auto-generate chart summary [skip ci]"
           commit_user_name: bishop[bot]
           commit_user_email: bishop[bot]@users.noreply.github.com
           commit_author: bishop[bot] <bishop[bot]@users.noreply.github.com>

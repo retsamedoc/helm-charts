@@ -1,0 +1,17 @@
+# Minimal overrides for chart-testing
+controllers:
+  main:
+    containers:
+      main:
+        env:
+          TZ: UTC
+ingress:
+  main:
+    enabled: false
+persistence:
+  config:
+    enabled: false
+  data:
+    enabled: false
+  library:
+    enabled: false

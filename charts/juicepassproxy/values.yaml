@@ -26,13 +26,13 @@ controllers:
           TZ: UTC
 
           # If defined, will attempt to get the EnelX Server Name, IP, and Port using telnet
-          #JUICEBOX_HOST: ""
+          # JUICEBOX_HOST: ""
 
           # Continually update the JuiceBox via telnet to point to JuicePass Proxy.
-          #UPDATE_UDPC: true
+          # UPDATE_UDPC: true
 
           # This is the IP or Hostname of the machine where JuicePass Proxy is running (required if UPDATE_UDPC is set)
-          #JPP_HOST: ""
+          # JPP_HOST: ""
 
           MQTT_HOST: ""
           MQTT_USER: ""

@@ -1,0 +1,7 @@
+# Minimal overrides for chart-testing install
+controllers:
+  main:
+    containers:
+      main:
+        env:
+          TZ: UTC
