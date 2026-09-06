@@ -11,7 +11,6 @@ Validate controller values
   {{- end -}}
 
   {{- $enabledContainers := include "retsamedoc.common.lib.controller.enabledContainers" (dict "rootContext" $rootContext "controllerObject" $controllerValues) | fromYaml }}
-  {{- /* Validate at least one container is enabled */ -}}
   {{- if not $enabledContainers -}}
     {{- fail (printf "Controller '%s': No containers are enabled. At least one container must be enabled. Check the 'enabled' field in your container definitions under 'controllers.%s.containers'." $controllerValues.identifier $controllerValues.identifier) -}}
   {{- end -}}

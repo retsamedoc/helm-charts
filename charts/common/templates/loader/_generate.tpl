@@ -4,10 +4,9 @@ Secondary entrypoint and primary loader for the common chart
 {{- define "retsamedoc.common.loader.generate" -}}
   {{- $rootContext := $ -}}
 
-  {{- /* Run global chart validations */ -}}
+  {{- /* Fail fast on chart-wide issues before rendering resources */ -}}
   {{- include "retsamedoc.common.lib.chart.validate" $rootContext -}}
 
-  {{- /* Build the templates */ -}}
   {{- include "retsamedoc.common.render.pvcs" $rootContext | nindent 0 -}}
   {{- include "retsamedoc.common.render.serviceAccount" $rootContext | nindent 0 -}}
   {{- include "retsamedoc.common.render.configMaps.fromFolder" $rootContext | nindent 0 -}}

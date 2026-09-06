@@ -6,7 +6,6 @@ Validate RoleBinding values
   {{- $roleBindingValues := .object -}}
   {{- $rules := $roleBindingValues.rules -}}
 
-  {{/* Verify permutations for RoleBinding subjects */}}
   {{- if and (not (empty $roleBindingValues.subjects)) (not (empty $roleBindingValues.roleRef)) -}}
     {{- $subjectTypes := list "User" "Group" "ServiceAccount" -}}
     {{- $subjectTypeCount := 0 -}}

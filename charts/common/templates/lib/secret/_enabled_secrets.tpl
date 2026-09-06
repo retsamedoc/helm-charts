@@ -7,7 +7,6 @@ Return the enabled secrets.
 
   {{- range $identifier, $secret := $rootContext.Values.secrets -}}
     {{- if kindIs "map" $secret -}}
-      {{- /* Enable Secret by default, but allow override */ -}}
       {{- $secretEnabled := true -}}
       {{- if hasKey $secret "enabled" -}}
         {{- $secretEnabled = $secret.enabled -}}

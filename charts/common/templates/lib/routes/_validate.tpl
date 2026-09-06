@@ -7,7 +7,7 @@ Validate Route values
 
   {{- $enabledServices := (include "retsamedoc.common.lib.service.enabledServices" (dict "rootContext" $rootContext) | fromYaml ) -}}
 
-  {{/* Verify automatic Service detection */}}
+  {{/* Require an explicit Service when auto-detect cannot choose uniquely */}}
   {{- if not (eq 1 (len $enabledServices)) -}}
     {{- if empty $routeObject.rules -}}
       {{- fail (printf "An explicit rule is required because automatic Service detection is not possible. (route: %s)" $routeObject.identifier) -}}
@@ -24,13 +24,11 @@ Validate Route values
     {{- end -}}
   {{- end -}}
 
-  {{/* Route Types */}}
   {{- $routeKind := $routeObject.kind | default "HTTPRoute"}}
   {{- if and (ne $routeKind "GRPCRoute") (ne $routeKind "HTTPRoute") (ne $routeKind "TCPRoute") (ne $routeKind "TLSRoute") (ne $routeKind "UDPRoute") }}
     {{- fail (printf "Not a valid route kind (%s)" $routeKind) }}
   {{- end }}
 
-  {{/* Route Rules */}}
   {{- range $routeObject.rules }}
   {{- if and (.filters) (.backendRefs) }}
     {{- range .filters }}

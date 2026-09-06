@@ -1095,7 +1095,8 @@ controllers: {}
       # https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
       # requests: {}
       # -- Configure whether the container should be restarted when resizing. This
-      # allows fine-grained control based on resource type (CPU or memory).
+      # allows fine-grained control based on resource type (CPU or memory). Emitted
+      # only when the target cluster is Kubernetes ≥1.33.
       # resizePolicy: []
       # -- (string) Restart policy for the container.
       # restartPolicy:
@@ -1605,7 +1606,8 @@ controllers: {}
       # https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
       # requests: {}
       # -- Configure whether the container should be restarted when resizing. This
-      # allows fine-grained control based on resource type (CPU or memory).
+      # allows fine-grained control based on resource type (CPU or memory). Emitted
+      # only when the target cluster is Kubernetes ≥1.33.
       # resizePolicy: []
       # -- (string) Restart policy for the container.
       # restartPolicy:

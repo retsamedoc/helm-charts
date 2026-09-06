@@ -4,16 +4,13 @@ Renders the controller objects required by the chart.
 {{- define "retsamedoc.common.render.controllers" -}}
   {{- $rootContext := $ -}}
 
-  {{- /* Generate named controller objects as required */ -}}
   {{- $enabledControllers := (include "retsamedoc.common.lib.controller.enabledControllers" (dict "rootContext" $rootContext) | fromYaml ) -}}
   {{- range $identifier := keys $enabledControllers -}}
-    {{- /* Create object from the raw controller values */ -}}
     {{- $controllerObject := (include "retsamedoc.common.lib.controller.getByIdentifier" (dict "rootContext" $rootContext "id" $identifier) | fromYaml) -}}
 
-    {{- /* Perform validations on the controller before rendering */ -}}
     {{- include "retsamedoc.common.lib.controller.validate" (dict "rootContext" $rootContext "object" $controllerObject) -}}
 
-    {{- /* If HPA is configured, propagate replicas to minReplicas and suppress replicas */ -}}
+    {{- /* HPA owns replica count: seed minReplicas from values.replicas, then clear replicas on the controller */ -}}
     {{- if $controllerObject.horizontalPodAutoscaler -}}
       {{- $controllerValues := get $rootContext.Values.controllers $identifier -}}
       {{- if and (hasKey $controllerValues "replicas") (ne (get $controllerValues "replicas") nil) -}}

@@ -91,6 +91,7 @@ spec:
   ipFamilies:
     {{ toYaml . | nindent 4 }}
   {{- end }}
+  {{- /* trafficDistribution requires Kubernetes ≥1.33 */ -}}
   {{- if and (ge ($rootContext.Capabilities.KubeVersion.Minor | int) 33) ($serviceObject.trafficDistribution) }}
   trafficDistribution: {{ $serviceObject.trafficDistribution }}
   {{- end }}

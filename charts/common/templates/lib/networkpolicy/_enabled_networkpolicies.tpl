@@ -7,7 +7,6 @@ Return the enabled NetworkPolicies.
 
   {{- range $name, $networkPolicy := $rootContext.Values.networkPolicy -}}
     {{- if kindIs "map" $networkPolicy -}}
-      {{- /* Enable by default, but allow override */ -}}
       {{- $networkPolicyEnabled := true -}}
       {{- if hasKey $networkPolicy "enabled" -}}
         {{- $networkPolicyEnabled = $networkPolicy.enabled -}}

@@ -7,7 +7,7 @@ Validate serviceMonitor values
 
   {{- $enabledServices := (include "retsamedoc.common.lib.service.enabledServices" (dict "rootContext" $rootContext) | fromYaml ) -}}
 
-  {{/* Verify automatic controller detection */}}
+  {{/* Require an explicit target when auto-detect cannot choose uniquely */}}
   {{- if not (eq 1 (len $enabledServices)) -}}
     {{- if and
         (empty (dig "selector" nil $serviceMonitorObject))

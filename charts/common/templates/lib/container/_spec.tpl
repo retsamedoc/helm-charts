@@ -48,6 +48,7 @@ ports: {{ toYaml . | trim | nindent 2 }}
   {{- with $containerObject.resources }}
 resources: {{ toYaml . | trim | nindent 2 }}
   {{- end -}}
+  {{- /* Container resizePolicy is only valid on Kubernetes ≥1.33; omit on older clusters */ -}}
   {{- if ge ($rootContext.Capabilities.KubeVersion.Minor | int) 33 }}
     {{- with $containerObject.resizePolicy }}
 resizePolicy: {{ . | toYaml | nindent 2 }}

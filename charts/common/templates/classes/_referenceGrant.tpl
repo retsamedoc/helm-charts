@@ -8,7 +8,7 @@ It returns empty output when no cross-namespace reference is detected.
 
   {{- $routeKind := $routeObject.kind | default "HTTPRoute" -}}
   {{- $routeNamespace := $routeObject.namespaceOverride | default $rootContext.Release.Namespace -}}
-  {{- /* Prefer stable API versions; fall back when Capabilities are empty. */ -}}
+  {{- /* Prefer stable API versions; fall back when Capabilities are empty (helm template / CI). */ -}}
   {{- $apiVersion := "" -}}
   {{- if $rootContext.Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1/ReferenceGrant" }}
     {{- $apiVersion = "gateway.networking.k8s.io/v1" -}}
@@ -20,7 +20,6 @@ It returns empty output when no cross-namespace reference is detected.
     {{- $apiVersion = "gateway.networking.k8s.io/v1beta1" -}}
   {{- end -}}
 
-  {{- /* Only generate a grant when the route is in a different namespace */ -}}
   {{- if ne $routeNamespace $rootContext.Release.Namespace -}}
     {{- $grantEnabled := true -}}
     {{- if hasKey $routeObject "referenceGrant" -}}
@@ -30,7 +29,6 @@ It returns empty output when no cross-namespace reference is detected.
     {{- end -}}
 
     {{- if $grantEnabled -}}
-      {{- /* Resolve backendRefs and collect Service names in the release namespace */ -}}
       {{- $serviceNames := list -}}
       {{- range $routeObject.rules -}}
         {{- range .backendRefs -}}
@@ -47,7 +45,6 @@ It returns empty output when no cross-namespace reference is detected.
               {{- $serviceNamespace = $rootContext.Release.Namespace -}}
             {{- end -}}
           {{- end -}}
-          {{- /* Only include Services in the release namespace */ -}}
           {{- if and $serviceName (eq $serviceNamespace $rootContext.Release.Namespace) -}}
             {{- if not (has $serviceName $serviceNames) -}}
               {{- $serviceNames = append $serviceNames $serviceName -}}
@@ -56,7 +53,6 @@ It returns empty output when no cross-namespace reference is detected.
         {{- end -}}
       {{- end -}}
 
-      {{- /* Only render if there are services to grant access to */ -}}
       {{- if $serviceNames -}}
         {{- $labels := merge
           ($routeObject.labels | default dict)

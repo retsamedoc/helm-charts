@@ -7,13 +7,11 @@ Env field used by the container.
   {{- $containerObject := $ctx.containerObject -}}
   {{- $envValues := get $containerObject "env" -}}
 
-  {{- /* Default to empty list */ -}}
   {{- $envList := list -}}
 
-  {{- /* See if an override is desired */ -}}
   {{- if not (empty $envValues) -}}
     {{- if kindIs "slice" $envValues -}}
-      {{- /* Env is a list so we assume the order is already as desired */ -}}
+      {{- /* List form: preserve author order */ -}}
       {{- range $name, $var := $envValues -}}
         {{- if kindIs "int" $name -}}
           {{- $name = required "environment variables as a list of maps require a name field" $var.name -}}
@@ -21,12 +19,11 @@ Env field used by the container.
       {{- end -}}
       {{- $envList = $envValues -}}
     {{- else -}}
-      {{- /* Env is a map so we must check if ordering is desired */ -}}
+      {{- /* Map form: optional dependsOn is topologically sorted */ -}}
       {{- $graph := dict -}}
 
       {{- range $name, $var := $envValues -}}
         {{- if kindIs "map" $var -}}
-          {{- /* Value is a map so ordering can be specified */ -}}
           {{- if empty (dig "dependsOn" nil $var) -}}
             {{- $_ := set $graph $name ( list ) -}}
           {{- else if kindIs "string" $var.dependsOn -}}
@@ -35,7 +32,6 @@ Env field used by the container.
             {{- $_ := set $graph $name $var.dependsOn -}}
           {{- end -}}
         {{- else -}}
-          {{- /* Value is not a map so no ordering can be specified */ -}}
           {{- $_ := set $graph $name ( list ) -}}
         {{- end -}}
       {{- end -}}

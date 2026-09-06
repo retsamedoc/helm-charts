@@ -7,7 +7,6 @@ Return the enabled routes.
 
   {{- range $name, $route := $rootContext.Values.route -}}
     {{- if kindIs "map" $route -}}
-      {{- /* Enable Route by default, but allow override */ -}}
       {{- $routeEnabled := true -}}
       {{- if hasKey $route "enabled" -}}
         {{- $routeEnabled = $route.enabled -}}

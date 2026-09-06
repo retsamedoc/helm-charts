@@ -91,7 +91,7 @@ spec:
             {{- $serviceName = $service.name -}}
           {{- end -}}
           {{- if empty .port -}}
-            {{/*- Default to the Service primary port if no port has been specified -*/}}
+            {{- /* Fall back to the Service primary port when the backend omits port */ -}}
             {{- if $service -}}
               {{- $defaultServicePort := include "retsamedoc.common.lib.service.primaryPort" (dict "rootContext" $rootContext "serviceObject" $service) | fromYaml -}}
               {{- if $defaultServicePort -}}
@@ -99,11 +99,9 @@ spec:
               {{- end -}}
             {{- end -}}
           {{- else -}}
-            {{/*- If a port number is given, use that -*/}}
             {{- if kindIs "float64" .port -}}
               {{- $servicePort = .port -}}
             {{- else if kindIs "string" .port -}}
-              {{/*- If a port name is given, try to resolve to a number -*/}}
               {{- $servicePort = include "retsamedoc.common.lib.service.getPortNumberByName" (dict "rootContext" $rootContext "serviceID" $service.identifier "portName" .port) -}}
               {{- if not $servicePort -}}
                 {{- fail (printf "No enabled Service Port found with this identifier. (route: '%s', service: '%s', identifier: '%s')" $routeObject.identifier $service.identifier .port) -}}

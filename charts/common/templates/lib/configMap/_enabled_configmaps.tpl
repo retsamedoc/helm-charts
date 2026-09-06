@@ -7,7 +7,6 @@ Return the enabled configMaps.
 
   {{- range $identifier, $secret := $rootContext.Values.configMaps -}}
     {{- if kindIs "map" $secret -}}
-      {{- /* Enable Secret by default, but allow override */ -}}
       {{- $secretEnabled := true -}}
       {{- if hasKey $secret "enabled" -}}
         {{- $secretEnabled = $secret.enabled -}}

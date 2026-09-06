@@ -7,7 +7,6 @@ Return the enabled serviceAccounts.
 
   {{- range $identifier, $serviceAccount := $rootContext.Values.serviceAccount -}}
     {{- if kindIs "map" $serviceAccount -}}
-      {{- /* Enable Service by default, but allow override */ -}}
       {{- $serviceAccountEnabled := true -}}
       {{- if hasKey $serviceAccount "enabled" -}}
         {{- $serviceAccountEnabled = $serviceAccount.enabled -}}

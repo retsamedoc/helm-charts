@@ -37,7 +37,6 @@ VolumeClaimTemplates for StatefulSet
   {{- $rootContext := .rootContext -}}
   {{- $statefulsetObject := .statefulsetObject -}}
 
-  {{- /* Default to empty list */ -}}
   {{- $volumeClaimTemplates := list -}}
 
   {{- range $index, $volumeClaimTemplate := (dig "statefulset" "volumeClaimTemplates" list $statefulsetObject) }}

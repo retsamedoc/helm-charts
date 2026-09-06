@@ -14,7 +14,6 @@ Returns the value for dnsPolicy
     {{- $dnsPolicy = "ClusterFirstWithHostNet" -}}
   {{- end -}}
 
-  {{- /* See if an override is desired */ -}}
   {{- $override := include "retsamedoc.common.lib.pod.getOption" (dict "ctx" $ctx "option" "dnsPolicy") -}}
 
   {{- if not (empty $override) -}}

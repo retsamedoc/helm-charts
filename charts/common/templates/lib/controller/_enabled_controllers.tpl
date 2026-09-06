@@ -7,7 +7,6 @@ Return the enabled controllers.
 
   {{- range $name, $controller := $rootContext.Values.controllers -}}
     {{- if kindIs "map" $controller -}}
-      {{- /* Enable by default, but allow override */ -}}
       {{- $controllerEnabled := true -}}
       {{- if hasKey $controller "enabled" -}}
         {{- $controllerEnabled = $controller.enabled -}}

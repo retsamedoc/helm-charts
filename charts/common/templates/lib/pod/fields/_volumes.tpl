@@ -5,13 +5,10 @@ Returns the value for volumes
   {{- $rootContext := .ctx.rootContext -}}
   {{- $controllerObject := .ctx.controllerObject -}}
 
-  {{- /* Default to empty list */ -}}
   {{- $persistenceItemsToProcess := dict -}}
   {{- $volumes := list -}}
 
-  {{- /* Loop over persistence values */ -}}
   {{- range $identifier, $persistenceValues := $rootContext.Values.persistence -}}
-    {{- /* Enable persistence item by default, but allow override */ -}}
     {{- $persistenceEnabled := true -}}
     {{- if hasKey $persistenceValues "enabled" -}}
       {{- $persistenceEnabled = $persistenceValues.enabled -}}
@@ -34,24 +31,20 @@ Returns the value for volumes
     {{- end -}}
   {{- end -}}
 
-  {{- /* Loop over persistence items */ -}}
   {{- range $identifier, $persistenceValues := $persistenceItemsToProcess -}}
     {{- $volume := dict "name" $identifier -}}
 
-    {{- /* PVC persistence type */ -}}
     {{- if eq (default "persistentVolumeClaim" $persistenceValues.type) "persistentVolumeClaim" -}}
       {{- $pvcName := (include "retsamedoc.common.lib.chart.names.fullname" $rootContext) -}}
       {{- if $persistenceValues.existingClaim -}}
-        {{- /* Always prefer an existingClaim if that is set */ -}}
+        {{- /* existingClaim wins over chart-managed PVC name */ -}}
         {{- $pvcName = tpl $persistenceValues.existingClaim  $rootContext -}}
       {{- else -}}
-        {{- /* Otherwise refer to the PVC name */ -}}
         {{- $object := (include "retsamedoc.common.lib.pvc.getByIdentifier" (dict "rootContext" $rootContext "id" $identifier) | fromYaml) -}}
         {{- $pvcName = get $object "name" -}}
       {{- end -}}
       {{- $_ := set $volume "persistentVolumeClaim" (dict "claimName" $pvcName) -}}
 
-    {{- /* configMap persistence type */ -}}
     {{- else if eq $persistenceValues.type "configMap" -}}
       {{- $objectName := "" -}}
       {{- if $persistenceValues.name -}}
@@ -72,7 +65,6 @@ Returns the value for volumes
         {{- $_ := set $volume.configMap "items" . -}}
       {{- end -}}
 
-    {{- /* Secret persistence type */ -}}
     {{- else if eq $persistenceValues.type "secret" -}}
       {{- $objectName := "" -}}
       {{- if $persistenceValues.name -}}
@@ -93,7 +85,6 @@ Returns the value for volumes
         {{- $_ := set $volume.secret "items" . -}}
       {{- end -}}
 
-    {{- /* emptyDir persistence type */ -}}
     {{- else if eq $persistenceValues.type "emptyDir" -}}
       {{- $_ := set $volume "emptyDir" dict -}}
       {{- with $persistenceValues.medium -}}
@@ -103,7 +94,6 @@ Returns the value for volumes
         {{- $_ := set $volume.emptyDir "sizeLimit" . -}}
       {{- end -}}
 
-    {{- /* ephemeral persistence type */ -}}
     {{- else if eq $persistenceValues.type "ephemeral" -}}
       {{- $_ := set $volume "ephemeral" dict -}}
       {{- $vct := dict -}}
@@ -119,7 +109,6 @@ Returns the value for volumes
       {{- end -}}
       {{- $_ := set $volume.ephemeral "volumeClaimTemplate" $vct -}}
 
-    {{- /* hostPath persistence type */ -}}
     {{- else if eq $persistenceValues.type "hostPath" -}}
       {{- $_ := set $volume "hostPath" dict -}}
       {{- $_ := set $volume.hostPath "path" (required "hostPath not set" $persistenceValues.hostPath) -}}
@@ -127,7 +116,7 @@ Returns the value for volumes
         {{- $_ := set $volume.hostPath "type" . -}}
       {{- end -}}
 
-    {{- /* image persistence type */ -}}
+    {{- /* Image volumes require Kubernetes ≥1.33 */ -}}
     {{- else if and (ge ($rootContext.Capabilities.KubeVersion.Minor | int) 33) (eq $persistenceValues.type "image") -}}
       {{- $_ := set $volume "image" dict -}}
       {{- if kindIs "string" $persistenceValues.image -}}
@@ -139,18 +128,15 @@ Returns the value for volumes
         {{- $_ := set $volume.image "pullPolicy" . -}}
       {{- end -}}
 
-    {{- /* nfs persistence type */ -}}
     {{- else if eq $persistenceValues.type "nfs" -}}
       {{- $_ := set $volume "nfs" dict -}}
       {{- $_ := set $volume.nfs "server" (required "server not set" $persistenceValues.server) -}}
       {{- $_ := set $volume.nfs "path" (required "path not set" $persistenceValues.path) -}}
 
-    {{- /* custom persistence type */ -}}
     {{- else if eq $persistenceValues.type "custom" -}}
       {{- $volume = $persistenceValues.volumeSpec -}}
       {{- $_ := set $volume "name" $identifier -}}
 
-    {{- /* Fail otherwise */ -}}
     {{- else -}}
       {{- fail (printf "Not a valid persistence.type (%s)" $persistenceValues.type) -}}
     {{- end -}}

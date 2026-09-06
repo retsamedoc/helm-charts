@@ -7,7 +7,6 @@ Return the enabled raw resources.
 
   {{- range $name, $resource := $rootContext.Values.rawResources -}}
     {{- if kindIs "map" $resource -}}
-      {{- /* Enable Raw Resource by default, but allow override */ -}}
       {{- $resourceEnabled := true -}}
       {{- if hasKey $resource "enabled" -}}
         {{- $resourceEnabled = $resource.enabled -}}

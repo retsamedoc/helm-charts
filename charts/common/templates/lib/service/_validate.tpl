@@ -8,7 +8,7 @@ Validate Service values
   {{- $enabledControllers := (include "retsamedoc.common.lib.controller.enabledControllers" (dict "rootContext" $rootContext) | fromYaml ) -}}
   {{- $enabledPorts := include "retsamedoc.common.lib.service.enabledPorts" (dict "rootContext" $rootContext "serviceObject" $serviceObject) | fromYaml }}
 
-  {{/* Verify automatic controller detection */}}
+  {{/* Require an explicit target when auto-detect cannot choose uniquely */}}
   {{- if not (eq 1 (len $enabledControllers)) -}}
     {{- if or (not (has "controller" (keys $serviceObject))) (empty (get $serviceObject "controller")) -}}
       {{- fail (printf "Service '%s': controller field is required because automatic controller detection is not possible (found %d enabled controllers). Please specify which controller this service should use." $serviceObject.identifier (len $enabledControllers)) -}}
@@ -28,7 +28,6 @@ Validate Service values
     {{- fail (printf "Service '%s': No enabled controller found with identifier '%s'. Available controllers: [%s]" $serviceObject.identifier $serviceObject.controller (join ", " $availableControllers)) -}}
   {{- end -}}
 
-  {{- /* Validate Service type */ -}}
   {{- $validServiceTypes := (list "ClusterIP" "LoadBalancer" "NodePort" "ExternalName" "ExternalIP") -}}
   {{- if and $serviceObject.type (not (mustHas $serviceObject.type $validServiceTypes)) -}}
     {{- fail (
@@ -41,17 +40,16 @@ Validate Service values
 
   {{- if ne $serviceObject.type "ExternalName" -}}
     {{- $enabledPorts := include "retsamedoc.common.lib.service.enabledPorts" (dict "rootContext" $rootContext "serviceObject" $serviceObject) | fromYaml }}
-    {{- /* Validate at least one port is enabled */ -}}
     {{- if not $enabledPorts -}}
       {{- $serviceType := $serviceObject.type | default "ClusterIP" -}}
       {{- fail (printf "Service '%s': No ports are enabled. At least one port must be enabled for service type '%s'. Add ports under 'service.%s.ports' in your values." $serviceObject.identifier $serviceType $serviceObject.identifier) -}}
     {{- end -}}
 
-    {{- /* Validate no duplicate port number+protocol combinations */ -}}
     {{- $seenPorts := dict -}}
     {{- range $name, $port := $enabledPorts -}}
       {{- if $port.port -}}
         {{- $portProtocol := $port.protocol | default "TCP" -}}
+        {{- /* Chart allows HTTP/HTTPS as Service port protocols; K8s treats them as TCP for uniqueness */ -}}
         {{- if has $portProtocol (list "HTTP" "HTTPS") -}}
           {{- $portProtocol = "TCP" -}}
         {{- end -}}

@@ -4,14 +4,11 @@ Renders the Secret objects required by the chart.
 {{- define "retsamedoc.common.render.secrets" -}}
   {{- $rootContext := $ -}}
 
-  {{- /* Generate named Secrets as required */ -}}
   {{- $enabledSecrets := (include "retsamedoc.common.lib.secret.enabledSecrets" (dict "rootContext" $rootContext) | fromYaml ) -}}
 
   {{- range $identifier := keys $enabledSecrets -}}
-    {{- /* Generate object from the raw secret values */ -}}
     {{- $secretObject := (include "retsamedoc.common.lib.secret.getByIdentifier" (dict "rootContext" $rootContext "id" $identifier) | fromYaml) -}}
 
-    {{- /* Include the Secret class */ -}}
     {{- include "retsamedoc.common.class.secret" (dict "rootContext" $rootContext "object" $secretObject) | nindent 0 -}}
   {{- end -}}
 {{- end -}}
@@ -27,10 +24,8 @@ Renders Secret objects required by the chart from a folder in the repo's path.
   {{- $secretsFromFolderEnabled := dig "enabled" false $secretsFromFolder -}}
 
   {{- if $secretsFromFolderEnabled -}}
-    {{- /* Perform validations before rendering */ -}}
     {{- include "retsamedoc.common.lib.secret.fromFolder.validate" (dict "rootContext" $ "basePath" ($secretsFromFolder.basePath | default "" )) -}}
 
-    {{- /* Collect folder contents */ -}}
     {{- $collected := include "retsamedoc.common.lib.filesFolders.collectFilesfromFolder" (
         dict
         "rootContext" $rootContext
@@ -40,7 +35,6 @@ Renders Secret objects required by the chart from a folder in the repo's path.
       ) | fromYaml
     -}}
 
-    {{- /* Iterate collected folders */ -}}
     {{- range $folder, $entry := $collected -}}
       {{- $secretValues := dict
         "enabled" true

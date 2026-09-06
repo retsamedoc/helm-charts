@@ -7,7 +7,6 @@ Return the enabled podMonitors.
 
   {{- range $identifier, $podMonitor := $rootContext.Values.podMonitor -}}
     {{- if kindIs "map" $podMonitor -}}
-      {{- /* Enable podMonitors by default, but allow override */ -}}
       {{- $podMonitorEnabled := true -}}
       {{- if hasKey $podMonitor "enabled" -}}
         {{- $podMonitorEnabled = $podMonitor.enabled -}}

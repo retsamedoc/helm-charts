@@ -8,7 +8,6 @@ Return the enabled containers for a controller.
   {{- $enabledContainers := dict -}}
   {{- range $name, $container := $controllerObject.containers -}}
     {{- if kindIs "map" $container -}}
-      {{- /* Enable container by default, but allow override */ -}}
       {{- $containerEnabled := true -}}
       {{- if hasKey $container "enabled" -}}
         {{- $containerEnabled = $container.enabled -}}

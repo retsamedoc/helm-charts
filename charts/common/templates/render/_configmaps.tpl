@@ -4,17 +4,13 @@ Renders the configMap objects required by the chart.
 {{- define "retsamedoc.common.render.configMaps" -}}
   {{- $rootContext := $ -}}
 
-  {{- /* Generate configMaps as required */ -}}
   {{- $enabledConfigMaps := (include "retsamedoc.common.lib.configMap.enabledConfigmaps" (dict "rootContext" $rootContext) | fromYaml ) -}}
 
   {{- range $identifier := keys $enabledConfigMaps -}}
-    {{- /* Generate object from the raw configMap values */ -}}
     {{- $configMapObject := (include "retsamedoc.common.lib.configMap.getByIdentifier" (dict "rootContext" $rootContext "id" $identifier) | fromYaml) -}}
 
-    {{- /* Perform validations on the configMap before rendering */ -}}
     {{- include "retsamedoc.common.lib.configMap.validate" (dict "rootContext" $rootContext "object" $configMapObject "id" $identifier) -}}
 
-      {{/* Include the configMap class */}}
       {{- include "retsamedoc.common.class.configMap" (dict "rootContext" $rootContext "object" $configMapObject) | nindent 0 -}}
   {{- end -}}
 {{- end -}}
@@ -30,10 +26,8 @@ Renders configMap objects required by the chart from a folder in the repo's path
   {{- $configMapsFromFolderEnabled := dig "enabled" false $configMapsFromFolder -}}
 
   {{- if $configMapsFromFolderEnabled -}}
-    {{- /* Perform validations before rendering */ -}}
     {{- include "retsamedoc.common.lib.configMap.fromFolder.validate" (dict "rootContext" $ "basePath" ($configMapsFromFolder.basePath | default "" )) -}}
 
-    {{- /* Collect folder contents */ -}}
     {{- $collected := include "retsamedoc.common.lib.filesFolders.collectFilesfromFolder" (
         dict
         "rootContext" $rootContext
@@ -43,7 +37,6 @@ Renders configMap objects required by the chart from a folder in the repo's path
       ) | fromYaml
     -}}
 
-    {{- /* Iterate collected folders */ -}}
     {{- range $folder, $entry := $collected -}}
       {{- $configMapValues := dict
         "enabled" true

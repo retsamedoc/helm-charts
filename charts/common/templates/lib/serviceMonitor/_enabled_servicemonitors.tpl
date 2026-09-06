@@ -7,7 +7,6 @@ Return the enabled serviceMonitors.
 
   {{- range $identifier, $serviceMonitor := $rootContext.Values.serviceMonitor -}}
     {{- if kindIs "map" $serviceMonitor -}}
-      {{- /* Enable serviceMonitors by default, but allow override */ -}}
       {{- $serviceMonitorEnabled := true -}}
       {{- if hasKey $serviceMonitor "enabled" -}}
         {{- $serviceMonitorEnabled = $serviceMonitor.enabled -}}

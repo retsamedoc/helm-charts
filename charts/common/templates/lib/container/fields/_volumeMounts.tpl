@@ -7,13 +7,10 @@ volumeMounts used by the container.
   {{- $controllerObject := $ctx.controllerObject -}}
   {{- $containerObject := $ctx.containerObject -}}
 
-  {{- /* Default to empty dict */ -}}
   {{- $persistenceItemsToProcess := dict -}}
   {{- $enabledVolumeMounts := list -}}
 
-  {{- /* Collect regular persistence items */ -}}
   {{- range $identifier, $persistenceValues := $rootContext.Values.persistence -}}
-    {{- /* Enable persistence item by default, but allow override */ -}}
     {{- $persistenceEnabled := true -}}
     {{- if hasKey $persistenceValues "enabled" -}}
       {{- $persistenceEnabled = $persistenceValues.enabled -}}
@@ -24,10 +21,8 @@ volumeMounts used by the container.
     {{- end -}}
   {{- end -}}
 
-  {{- /* Collect volumeClaimTemplates */ -}}
   {{- if not (empty (dig "statefulset" "volumeClaimTemplates" nil $controllerObject)) -}}
     {{- range $persistenceValues := $controllerObject.statefulset.volumeClaimTemplates -}}
-      {{- /* Enable persistence item by default, but allow override */ -}}
       {{- $persistenceEnabled := true -}}
       {{- if hasKey $persistenceValues "enabled" -}}
         {{- $persistenceEnabled = $persistenceValues.enabled -}}
@@ -47,15 +42,12 @@ volumeMounts used by the container.
   {{- end -}}
 
   {{- range $identifier, $persistenceValues := $persistenceItemsToProcess -}}
-    {{- /* Set some default values */ -}}
 
-    {{- /* Set the default mountPath to /<name_of_the_peristence_item> */ -}}
     {{- $mountPath := (printf "/%v" $identifier) -}}
     {{- if eq "hostPath" (default "persistentVolumeClaim" $persistenceValues.type) -}}
       {{- $mountPath = $persistenceValues.hostPath -}}
     {{- end -}}
 
-    {{- /* Process configured mounts */ -}}
     {{- if or .globalMounts .advancedMounts -}}
       {{- $mounts := list -}}
       {{- if hasKey . "globalMounts" -}}
@@ -73,28 +65,23 @@ volumeMounts used by the container.
         {{- $volumeMount := dict -}}
         {{- $_ := set $volumeMount "name" $identifier -}}
 
-        {{- /* Use the specified mountPath if provided */ -}}
         {{- with .path -}}
           {{- $mountPath = (tpl . $rootContext) -}}
         {{- end -}}
         {{- $_ := set $volumeMount "mountPath" $mountPath -}}
 
-        {{- /* Use the specified subPath if provided */ -}}
         {{- with .subPath -}}
           {{- $_ := set $volumeMount "subPath" (tpl . $rootContext) -}}
         {{- end -}}
 
-        {{- /* Use the specified subPathExpr if provided */ -}}
         {{- with .subPathExpr -}}
           {{- $_ := set $volumeMount "subPathExpr" . -}}
         {{- end -}}
 
-        {{- /* Use the specified readOnly setting if provided */ -}}
         {{- with .readOnly -}}
           {{- $_ := set $volumeMount "readOnly" . -}}
         {{- end -}}
 
-        {{- /* Use the specified mountPropagation setting if provided */ -}}
         {{- with .mountPropagation -}}
           {{- $_ := set $volumeMount "mountPropagation" . -}}
         {{- end -}}
@@ -102,7 +89,6 @@ volumeMounts used by the container.
         {{- $enabledVolumeMounts = append $enabledVolumeMounts $volumeMount -}}
       {{- end -}}
 
-    {{- /* Mount to default path if no mounts are configured */ -}}
     {{- else -}}
       {{- $volumeMount := dict -}}
       {{- $_ := set $volumeMount "name" $identifier -}}

@@ -9,7 +9,6 @@ Name used by the container.
   {{- /* Default to container identifier */ -}}
   {{- $name := $containerObject.identifier -}}
 
-  {{- /* See if an override is desired */ -}}
   {{- if hasKey $containerObject "nameOverride" -}}
     {{- $option := get $containerObject "nameOverride" -}}
     {{- if not (empty $option) -}}

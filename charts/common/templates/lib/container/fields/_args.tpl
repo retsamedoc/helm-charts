@@ -6,10 +6,8 @@ Args used by the container.
   {{- $containerObject := $ctx.containerObject -}}
   {{- $argValues := get $containerObject "args" -}}
 
-  {{- /* Default to empty list */ -}}
   {{- $args := list -}}
 
-  {{- /* See if an override is desired */ -}}
   {{- if not (empty $argValues) -}}
     {{- if kindIs "string" $argValues -}}
       {{- $args = append $args $argValues -}}

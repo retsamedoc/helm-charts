@@ -7,7 +7,6 @@ Return the enabled Ingresses.
 
   {{- range $name, $ingress := $rootContext.Values.ingress -}}
     {{- if kindIs "map" $ingress -}}
-      {{- /* Enable by default, but allow override */ -}}
       {{- $ingressEnabled := true -}}
       {{- if hasKey $ingress "enabled" -}}
         {{- $ingressEnabled = $ingress.enabled -}}

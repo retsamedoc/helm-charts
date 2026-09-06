@@ -7,7 +7,6 @@ Return the enabled services.
 
   {{- range $identifier, $objectValues := $rootContext.Values.service -}}
     {{- if kindIs "map" $objectValues -}}
-      {{- /* Enable Service by default, but allow override */ -}}
       {{- $serviceEnabled := true -}}
       {{- if hasKey $objectValues "enabled" -}}
         {{- $serviceEnabled = $objectValues.enabled -}}

@@ -6,10 +6,8 @@ Command used by the container.
   {{- $containerObject := $ctx.containerObject -}}
   {{- $commandValues := get $containerObject "command" -}}
 
-  {{- /* Default to empty list */ -}}
   {{- $command := list -}}
 
-  {{- /* See if an override is desired */ -}}
   {{- if not (empty $commandValues) -}}
     {{- if kindIs "string" $commandValues -}}
       {{- $command = append $command $commandValues -}}

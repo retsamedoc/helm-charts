@@ -7,7 +7,7 @@ Validate Ingress values
 
   {{- $enabledServices := (include "retsamedoc.common.lib.service.enabledServices" (dict "rootContext" $rootContext) | fromYaml ) -}}
 
-  {{/* Verify automatic service detection */}}
+  {{/* Require an explicit Service when auto-detect cannot choose uniquely */}}
   {{- if not (eq 1 (len $enabledServices)) -}}
     {{- range $ingressObject.hosts -}}
       {{- $host := . -}}

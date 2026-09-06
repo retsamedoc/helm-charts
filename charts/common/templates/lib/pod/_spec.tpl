@@ -46,6 +46,7 @@ imagePullSecrets: {{ . | nindent 2 }}
   {{- with (include "retsamedoc.common.lib.pod.getOption" (dict "ctx" $ctx "option" "terminationGracePeriodSeconds")) }}
 terminationGracePeriodSeconds: {{ . | trim }}
   {{- end -}}
+  {{- /* Pod-level resources / resourceClaims need Kubernetes ≥1.32; pod resizePolicy needs ≥1.36 */ -}}
   {{- if ge ($rootContext.Capabilities.KubeVersion.Minor | int) 32 }}
     {{- with (include "retsamedoc.common.lib.pod.getOption" (dict "ctx" $ctx "option" "resources")) }}
 resources: {{ . | nindent 2 }}

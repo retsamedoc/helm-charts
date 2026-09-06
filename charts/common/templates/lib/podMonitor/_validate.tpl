@@ -7,7 +7,7 @@ Validate podMonitor values
 
   {{- $enabledControllers := (include "retsamedoc.common.lib.controller.enabledControllers" (dict "rootContext" $rootContext) | fromYaml ) -}}
 
-  {{/* Verify automatic controller detection */}}
+  {{/* Require an explicit target when auto-detect cannot choose uniquely */}}
   {{- if not (eq 1 (len $enabledControllers)) -}}
     {{- if and
         (empty (dig "selector" nil $podMonitorObject))

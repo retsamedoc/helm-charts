@@ -7,7 +7,6 @@ Return the enabled PVCs.
 
   {{- range $identifier, $persistenceItem := $rootContext.Values.persistence -}}
     {{- if kindIs "map" $persistenceItem -}}
-      {{- /* Enable PVC by default, but allow override */ -}}
       {{- $pvcEnabled := true -}}
       {{- if hasKey $persistenceItem "enabled" -}}
         {{- $pvcEnabled = $persistenceItem.enabled -}}

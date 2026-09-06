@@ -7,11 +7,9 @@ Probes used by the container.
   {{- $controllerObject := $ctx.controllerObject -}}
   {{- $containerObject := $ctx.containerObject -}}
 
-  {{- /* Default to empty dict */ -}}
   {{- $enabledProbes := dict -}}
 
   {{- range $probeName, $probeValues := $containerObject.probes -}}
-    {{- /* Disable probe by default, but allow override */ -}}
     {{- $probeEnabled := false -}}
     {{- if hasKey $probeValues "enabled" -}}
       {{- $probeEnabled = $probeValues.enabled -}}
@@ -40,14 +38,13 @@ Probes used by the container.
         {{- $probeType := "" -}}
         {{- $probeHeader := "" -}}
 
-        {{- /* Determine probe type */ -}}
+        {{- /* AUTO inherits protocol from the controller's primary Service port */ -}}
         {{- if eq $probeValues.type "AUTO" -}}
           {{- $probeType = $primaryServiceDefaultPort.protocol -}}
         {{- else -}}
           {{- $probeType = $probeValues.type | default "TCP" -}}
         {{- end -}}
 
-        {{- /* HTTP(S) probe configuration */ -}}
         {{- if or ( eq $probeType "HTTPS" ) ( eq $probeType "HTTP" ) -}}
           {{- $probeHeader = "httpGet" -}}
           {{- $_ := set $probeDefinition $probeHeader (
@@ -57,7 +54,6 @@ Probes used by the container.
             )
           -}}
 
-        {{- /* GPRC probe configuration */ -}}
         {{- else if (eq $probeType "GRPC") -}}
           {{- $probeHeader = "grpc" -}}
           {{- $_ := set $probeDefinition $probeHeader dict -}}
@@ -65,8 +61,8 @@ Probes used by the container.
               {{- $_ := set (index $probeDefinition $probeHeader) "service" $probeValues.service -}}
             {{- end -}}
 
-        {{- /* default to tcpSocket probe */ -}}
         {{- else -}}
+          {{- /* Non-HTTP/GRPC types (including default TCP) use tcpSocket */ -}}
           {{- $probeHeader = "tcpSocket" -}}
           {{- $_ := set $probeDefinition $probeHeader dict -}}
         {{- end -}}

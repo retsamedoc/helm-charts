@@ -6,6 +6,7 @@ This template serves as a blueprint for BackendTLSPolicy objects.
   {{- $object := .object -}}
 
   {{- $apiVersion := "" -}}
+  {{- /* Prefer stable API versions; fall back when Capabilities are empty (helm template / CI). */ -}}
   {{- if $rootContext.Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1/BackendTLSPolicy" }}
     {{- $apiVersion = "gateway.networking.k8s.io/v1" -}}
   {{- else if $rootContext.Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1alpha3/BackendTLSPolicy" }}
