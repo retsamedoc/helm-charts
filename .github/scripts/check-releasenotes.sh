@@ -34,6 +34,13 @@ if [ "$CURRENT" == "" ] || [ "$CURRENT" == "null" ]; then
   exit 1
 fi
 
+# New charts have no Chart.yaml on the default branch yet — requiring changes
+# to differ from origin would fail with "exists on disk, but not in origin/...".
+if ! git cat-file -e "origin/${DEFAULT_BRANCH}:${rel_chart_file}" 2>/dev/null; then
+  printf "Releasenotes OK for %s (new chart)\n" "$chart_file"
+  exit 0
+fi
+
 ORIGINAL=$(git show "origin/${DEFAULT_BRANCH}:${rel_chart_file}" | yq e '.annotations."artifacthub.io/changes"' -P -)
 
 if [ "$CURRENT" == "$ORIGINAL" ]; then
