@@ -39,7 +39,7 @@ jobs:
         run: |
           set -euo pipefail
           EXCLUDED=$(yq eval -o=json '.excluded-charts // []' .github/ct-lint.yaml)
-          CHARTS=$(ct list-changed --config .github/ct-lint.yaml || true)
+          CHARTS=$(ct list-changed --config .github/ct-lint.yaml)
           if [[ -z "${CHARTS}" ]]; then
             echo "charts=[]" >> "$GITHUB_OUTPUT"
             echo "detected=false" >> "$GITHUB_OUTPUT"
