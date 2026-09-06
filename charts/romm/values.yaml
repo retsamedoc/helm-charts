@@ -29,19 +29,19 @@ env:
 
   # optional api
   # STEAMGRIDDB_API_KEY: ""
-  
+
   # paid API only (optional)
   # MOBYGAMES_API_KEY: ""
 
   # Disables playing in browser with EmulatorJS (builtin)
   # DISABLE_EMULATOR_JS: false
-  
+
   # Disables playing flash games with RuffleRS (builtin)
   # DISABLE_RUFFLE_RS: false
-  
+
   # Disables CSRF protection (not recommended)
   # DISABLE_CSRF_PROTECTION: false
-  
+
   # Disable auth on download endpoint (WebRcade, Tinfoil)
   # DISABLE_DOWNLOAD_ENDPOINT_AUTH: false
 
@@ -50,10 +50,10 @@ env:
 
   # Enable rescanning of library when filesystem changes
   # ENABLE_RESCAN_ON_FILESYSTEM_CHANGE: false
-  
+
   # Delay in minutes before rescanning library when filesystem changes
   # RESCAN_ON_FILESYSTEM_CHANGE_DELAY: 5
-  
+
   # Cron expression for scheduled rescanning
   # SCHEDULED_RESCAN_CRON: "0 3 * * *"
 
@@ -121,4 +121,3 @@ persistence:
   resources:
     enabled: true
     mountPath: /romm/resources
-
