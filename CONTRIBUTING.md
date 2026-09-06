@@ -13,6 +13,7 @@ Chart `version` uses **`YY.M.r`** (two-digit year, month without zero-padding, r
 - In branch names you may omit `.0`: `feat/common-26.9` means target version `26.9.0`.
 - Bump `r` for each releasable change within the same month; start a new month at `.0`.
 - `appVersion` stays the upstream app’s own version scheme (not CalVer).
+- Migrating an existing chart from the old **`YYYY.M.r`** scheme (e.g. `2026.2.5` → `26.9.0`) looks like a SemVer downgrade to `ct lint`. That one-time paradigm change is intentional; `.github/ct-lint.yaml` has `check-version-increment: false` until all charts use `YY.M.r` (then re-enable).
 
 ## Branching
 
