@@ -38,6 +38,7 @@ Shared library: [`charts/common`](charts/common) (`type: library`, helpers `rets
 Before opening a PR that touches a chart:
 
 - [ ] `Chart.yaml` `name` equals the directory name
+- [ ] `maintainers[].name` is a **GitHub username** (this repo: `retsamedoc`), not a display name — `ct lint` looks the name up on GitHub and fails with 404 otherwise
 - [ ] `version` bumped (`YY.M.r` CalVer) for any releasable change; `appVersion` updated when the app image/tag changes
 - [ ] `annotations.artifacthub.io/changes` updated for the new chart version
 - [ ] Rancher keys in `annotations` (`catalog.cattle.io/display-name`, `catalog.cattle.io/os`)
