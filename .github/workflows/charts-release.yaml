@@ -81,9 +81,11 @@ jobs:
 
       - name: Create commit
         id: create-commit
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
-          file_pattern: charts/**/
+          file_pattern: |
+            charts/*/README.md
+            charts/*/README_CONFIG.md.gotmpl
           commit_message: "chore: Auto-update chart README [skip ci]"
           commit_user_name: bishop[bot]
           commit_user_email: bishop[bot]@users.noreply.github.com
@@ -229,7 +231,7 @@ jobs:
         run: ./.github/scripts/gen-chart-summary.sh
 
       - name: Create Commit
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "chore: Auto-generate chart summary [skip ci]"
           commit_user_name: bishop[bot]

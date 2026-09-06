@@ -57,7 +57,8 @@ jobs:
   releasenotes:
     name: Releasenotes
     needs: collect-changes
-    if: needs.collect-changes.outputs.changesDetected == 'true'
+    # Only meaningful on PRs — after merge to main, Chart.yaml already matches origin/main
+    if: github.event_name == 'pull_request' && needs.collect-changes.outputs.changesDetected == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
