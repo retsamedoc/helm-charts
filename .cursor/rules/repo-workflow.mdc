@@ -1,0 +1,13 @@
+---
+description: Branching, releasable main, and what not to commit
+alwaysApply: true
+---
+
+# Repo workflow
+
+- Chart work: branch `feat/$chartname-$target_version` (e.g. `feat/common-26.9`). Repo/CI/docs: `chore/…`.
+- PRs into `main` only; **squash-merge**. No incomplete charts on `main`.
+- Directory `charts/<name>/` must match `Chart.yaml` `name`.
+- Commit `Chart.lock`; never commit vendored `charts/*/charts/*.tgz` (gitignored).
+- Never commit scratch/audit files (`AUDIT.md`, local notes). Delete them before PR.
+- Prefer `CONTRIBUTING.md` for the full checklist; follow Chart.yaml Cursor rules when editing charts.

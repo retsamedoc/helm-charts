@@ -1,0 +1,22 @@
+{{/*
+Return the enabled controllers.
+*/}}
+{{- define "retsamedoc.common.lib.controller.enabledControllers" -}}
+  {{- $rootContext := .rootContext -}}
+  {{- $enabledControllers := dict -}}
+
+  {{- range $name, $controller := $rootContext.Values.controllers -}}
+    {{- if kindIs "map" $controller -}}
+      {{- $controllerEnabled := true -}}
+      {{- if hasKey $controller "enabled" -}}
+        {{- $controllerEnabled = $controller.enabled -}}
+      {{- end -}}
+
+      {{- if $controllerEnabled -}}
+        {{- $_ := set $enabledControllers $name . -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- $enabledControllers | toYaml -}}
+{{- end -}}

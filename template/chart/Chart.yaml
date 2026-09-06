@@ -3,9 +3,9 @@ apiVersion: v2
 name: CHART_NAME
 description: TODO — describe DISPLAY_NAME
 home: https://github.com/retsamedoc/helm-charts/tree/main/charts/CHART_NAME
-version: 0.1.0
+version: 26.9.0
 appVersion: "0.0.0"
-kubeVersion: ">=1.25.0-0"
+kubeVersion: ">=1.31.0-0"
 
 keywords:
   - CHART_NAME
@@ -19,8 +19,8 @@ maintainers:
 
 dependencies:
   - name: common
-    repository: https://bjw-s-labs.github.io/helm-charts
-    version: 4.6.2
+    repository: file://../common
+    version: 26.9.0
 
 annotations:
   catalog.cattle.io/display-name: DISPLAY_NAME
@@ -28,8 +28,8 @@ annotations:
   artifacthub.io/links: |
     - name: Chart Source
       url: https://github.com/retsamedoc/helm-charts/tree/main/charts/CHART_NAME
-    - name: Common library chart definition
-      url: https://github.com/bjw-s-labs/helm-charts/blob/main/charts/library/common/Chart.yaml
+    - name: Common library
+      url: https://github.com/retsamedoc/helm-charts/tree/main/charts/common
   artifacthub.io/signKey: |
     fingerprint: 40D16531ADC81528315B65664C77EFEB7F669F40
     url: https://retsamedoc.github.io/helm-charts/pgp-public-key.asc

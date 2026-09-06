@@ -1,0 +1,23 @@
+---
+description: Chart.yaml maintainer.name must be a GitHub username (ct lint)
+globs: "**/Chart.yaml"
+alwaysApply: false
+---
+
+# Chart.yaml maintainers
+
+`ct lint` validates `maintainers[].name` as a **GitHub username** (HTTP lookup). A display name returns `404 Not Found` and fails CI.
+
+```yaml
+# ✅ correct
+maintainers:
+  - name: retsamedoc
+    email: retsamedoc@digitalactionsproject.org
+
+# ❌ wrong — human name is not a GitHub user
+maintainers:
+  - name: Zach Schimke
+    email: retsamedoc@digitalactionsproject.org
+```
+
+Use `retsamedoc` for charts in this repository unless the chart is owned by a different GitHub account.

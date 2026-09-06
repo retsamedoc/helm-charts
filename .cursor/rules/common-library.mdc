@@ -1,0 +1,15 @@
+---
+description: In-repo common library conventions (helpers, values, tests)
+globs: charts/common/**
+alwaysApply: false
+---
+
+# Common library (`charts/common`)
+
+- Helpers are **`retsamedoc.common.*`** — never `bjw-s.common.*` or other upstream prefixes.
+- Top-level NetworkPolicy values key is **`networkPolicy`** (singular). Do not reintroduce `networkpolicies`.
+- Do **not** install this chart standalone; app charts depend on it. Keep `catalog.cattle.io/hidden: "true"`.
+- Unit tests live in **`charts/common/test-chart/`** (ignore via `.helmignore`). Do not fatten `template/chart/` into a test harness.
+- Run tests with: `helm unittest -f 'unittests/*_test.yaml' charts/common/test-chart`
+- Gateway: `route:` / `backendTLSPolicy:` only — no chart-owned `Gateway` / `GatewayClass` (cluster ops).
+- Template comments: explain **why** (version gates, Capabilities fallbacks, ordering). Delete narration that only restates the next line.

@@ -1,0 +1,96 @@
+suite: gateway HTTPRoute and BackendTLSPolicy
+templates:
+  - common.yaml
+tests:
+  - it: should render an HTTPRoute with v1 apiVersion
+    set:
+      controllers:
+        main:
+          containers:
+            main:
+              image:
+                repository: nginx
+                tag: "1.27"
+      service:
+        main:
+          controller: main
+          ports:
+            http:
+              port: 80
+      route:
+        main:
+          kind: HTTPRoute
+          parentRefs:
+            - name: my-gateway
+              namespace: kube-system
+          hostnames:
+            - app.example.com
+          rules:
+            - backendRefs:
+                - identifier: main
+                  port: http
+    asserts:
+      - containsDocument:
+          apiVersion: gateway.networking.k8s.io/v1
+          kind: HTTPRoute
+          name: release-name
+          any: true
+      - documentSelector:
+          path: kind
+          value: HTTPRoute
+        equal:
+          path: spec.parentRefs[0].name
+          value: my-gateway
+      - documentSelector:
+          path: kind
+          value: HTTPRoute
+        equal:
+          path: spec.hostnames[0]
+          value: app.example.com
+
+  - it: should render a BackendTLSPolicy targeting the chart service
+    set:
+      controllers:
+        main:
+          containers:
+            main:
+              image:
+                repository: nginx
+                tag: "1.27"
+      service:
+        main:
+          controller: main
+          ports:
+            http:
+              port: 80
+      backendTLSPolicy:
+        main:
+          targetRefs:
+            - identifier: main
+          validation:
+            hostname: app.example.com
+            wellKnownCACertificates: System
+    asserts:
+      - containsDocument:
+          apiVersion: gateway.networking.k8s.io/v1
+          kind: BackendTLSPolicy
+          name: release-name
+          any: true
+      - documentSelector:
+          path: kind
+          value: BackendTLSPolicy
+        equal:
+          path: spec.validation.hostname
+          value: app.example.com
+      - documentSelector:
+          path: kind
+          value: BackendTLSPolicy
+        equal:
+          path: spec.targetRefs[0].kind
+          value: Service
+      - documentSelector:
+          path: kind
+          value: BackendTLSPolicy
+        equal:
+          path: spec.targetRefs[0].name
+          value: release-name

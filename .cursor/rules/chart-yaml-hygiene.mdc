@@ -1,0 +1,32 @@
+---
+description: Chart.yaml hygiene — CalVer, AH changes, signKey, Rancher, icons
+globs: "**/Chart.yaml"
+alwaysApply: false
+---
+
+# Chart.yaml hygiene
+
+- **`version`**: always full CalVer `YY.M.r` (e.g. `26.9.0`). Never omit `.r` in Chart.yaml.
+- **`artifacthub.io/changes`**: update whenever `version` bumps (required by releasenotes CI).
+- **`artifacthub.io/signKey`**: always present (fingerprint + Pages pubkey URL). See SIGNING.md.
+- **Rancher**: `catalog.cattle.io/display-name` and `catalog.cattle.io/os: linux`.
+- **Library charts** (`type: library`): also set `catalog.cattle.io/hidden: "true"`.
+- **`icon`**: prefer `https://retsamedoc.github.io/helm-charts/logos/<file>` with the file under `logos/`.
+- **`name`**: must equal the directory name under `charts/`.
+
+```yaml
+# ✅
+version: 26.9.0
+annotations:
+  catalog.cattle.io/display-name: My App
+  catalog.cattle.io/os: linux
+  artifacthub.io/signKey: |
+    fingerprint: 40D16531ADC81528315B65664C77EFEB7F669F40
+    url: https://retsamedoc.github.io/helm-charts/pgp-public-key.asc
+  artifacthub.io/changes: |-
+    - kind: changed
+      description: |-
+        Short releasenote for this version
+
+# ❌ version: "26.9"   # missing .r — breaks SemVer-shaped tooling
+```

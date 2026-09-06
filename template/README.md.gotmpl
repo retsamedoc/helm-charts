@@ -68,7 +68,7 @@ The command removes all the Kubernetes components associated with the chart **in
 
 {{- define "custom.configuration.readValues" -}}
 Read through the [values.yaml](./values.yaml) file. It has several commented out suggested values.
-Other values may be used from the [values.yaml](https://github.com/bjw-s-labs/helm-charts/tree/main/charts/library/common/values.yaml) from the [common library](https://github.com/bjw-s-labs/helm-charts/tree/main/charts/library/common).
+Other values may be used from the [values.yaml](https://github.com/retsamedoc/helm-charts/tree/main/charts/common/values.yaml) from the [common library](https://github.com/retsamedoc/helm-charts/tree/main/charts/common).
 {{- end -}}
 
 {{- define "custom.configuration.example.set" -}}
@@ -92,7 +92,7 @@ helm install {{ template "chart.name" . }} {{ template "custom.helm.path" . }} -
 {{- define "custom.valuesSection" -}}
 ## Values
 
-**Important**: When deploying an application Helm chart you can add more values from the common library chart [here](https://github.com/bjw-s-labs/helm-charts/tree/main/charts/library/common)
+**Important**: When deploying an application Helm chart you can add more values from the common library chart [here](https://github.com/retsamedoc/helm-charts/tree/main/charts/common)
 
 {{ template "chart.valuesTable" . }}
 {{- end -}}

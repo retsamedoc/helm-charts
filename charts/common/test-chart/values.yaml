@@ -1,0 +1,4 @@
+---
+# Default values for common-test; suites override via values files / set.
+controllers: {}
+service: {}

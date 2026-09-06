@@ -4,7 +4,7 @@
 
 ## Branch
 
-- [ ] `feat/$chartname-$target_version` for chart work, or `chore/…` for repo-only work
+- [ ] `feat/$chartname-$target_version` for chart work (CalVer `YY.M` or `YY.M.r`), or `chore/…` for repo-only work
 
 ## Chart checklist (if `charts/` changed)
 

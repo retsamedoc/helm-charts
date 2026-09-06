@@ -1,6 +1,6 @@
 ---
 {{/* Make sure all variables are set properly */}}
-{{- include "bjw-s.common.loader.init" . }}
+{{- include "retsamedoc.common.loader.init" . }}
 
 {{- define "app-template.hardcodedValues" -}}
 # Set the nameOverride based on the release name if no override has been set
@@ -12,4 +12,4 @@ global:
 {{- $_ := mergeOverwrite .Values (include "app-template.hardcodedValues" . | fromYaml) -}}
 
 {{/* Render the templates */}}
-{{ include "bjw-s.common.loader.generate" . }}
+{{ include "retsamedoc.common.loader.generate" . }}
