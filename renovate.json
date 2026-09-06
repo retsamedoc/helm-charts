@@ -1,0 +1,34 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "prConcurrentLimit": 5,
+  "helm-values": {
+    "fileMatch": [
+      "(^|/)charts/.+/values\\.ya?ml$"
+    ]
+  },
+  "packageRules": [
+    {
+      "description": "Group GitHub Actions updates",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "groupName": "github-actions"
+    },
+    {
+      "description": "Group bjw-s-labs common library bumps",
+      "matchDatasources": [
+        "helm"
+      ],
+      "matchPackageNames": [
+        "common"
+      ],
+      "groupName": "bjw-s-labs-common"
+    }
+  ]
+}

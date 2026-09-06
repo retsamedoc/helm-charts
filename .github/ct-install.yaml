@@ -3,9 +3,15 @@ target-branch: main
 helm-extra-args: --timeout 600s
 chart-dirs:
   - charts
+# Install only charts that render on common 4.x controllers API.
+# Others remain lint-only until values migration (see CONTRIBUTING.md).
 excluded-charts:
+  - esphome
+  - retrom
+  - romm
+  - weatherflow2mqtt
 chart-repos:
   - bitnami=https://charts.bitnami.com/bitnami
-  - library=https://bjw-s.github.io/helm-charts
+  - library=https://bjw-s-labs.github.io/helm-charts
   - retsamedoc=https://retsamedoc.github.io/helm-charts
   - jetstack=https://charts.jetstack.io

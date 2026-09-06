@@ -1,20 +1,17 @@
 ---
 apiVersion: v2
-name: weatherflow2mqtt
-description: WeatherFlow to MQTT for Home Assistant
-home: https://github.com/retsamedoc/helm-charts/tree/main/charts/weatherflow2mqtt
-icon: https://avatars.githubusercontent.com/u/605023?s=200&v=4
-version: 0.1.2
-appVersion: "3.1.6"
+name: CHART_NAME
+description: TODO — describe DISPLAY_NAME
+home: https://github.com/retsamedoc/helm-charts/tree/main/charts/CHART_NAME
+version: 0.1.0
+appVersion: "0.0.0"
 kubeVersion: ">=1.25.0-0"
 
 keywords:
-  - weatherflow
-  - home-automation
-  - mqtt
+  - CHART_NAME
 
 sources:
-  - https://github.com/briis/hass-weatherflow2mqtt
+  - https://github.com/retsamedoc/helm-charts/tree/main/charts/CHART_NAME
 
 maintainers:
   - name: Zach Schimke
@@ -26,17 +23,16 @@ dependencies:
     version: 4.6.2
 
 annotations:
-  catalog.cattle.io/display-name: Weatherflow to MQTT Bridge
+  catalog.cattle.io/display-name: DISPLAY_NAME
   catalog.cattle.io/os: linux
   artifacthub.io/links: |
     - name: Chart Source
-      url: https://github.com/retsamedoc/helm-charts
+      url: https://github.com/retsamedoc/helm-charts/tree/main/charts/CHART_NAME
     - name: Common library chart definition
       url: https://github.com/bjw-s-labs/helm-charts/blob/main/charts/library/common/Chart.yaml
   artifacthub.io/signKey: |
     fingerprint: REPLACE_AFTER_KEY_GENERATION
     url: https://retsamedoc.github.io/helm-charts/pgp-public-key.asc
   artifacthub.io/changes: |-
-    - kind: changed
-      description: |-
-        Chart hygiene — annotations, appVersion, signKey placeholder, Chart.lock
+    - kind: added
+      description: Initial chart

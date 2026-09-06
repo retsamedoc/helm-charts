@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  collect-changes:
+    name: Collect changes
+    runs-on: ubuntu-latest
+    outputs:
+      changesDetected: ${{ steps.collect.outputs.changesDetected }}
+      addedOrModifiedCharts: ${{ steps.collect.outputs.addedOrModifiedCharts }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Collect changes
+        id: collect
+        uses: ./.github/actions/collect-changes
+
+  lint:
+    name: Lint
+    needs: collect-changes
+    uses: ./.github/workflows/charts-lint.yaml
+    with:
+      checkoutCommit: ${{ github.sha }}
+      chartChangesDetected: ${{ needs.collect-changes.outputs.changesDetected || 'false' }}
+
+  test:
+    name: Test
+    needs: collect-changes
+    uses: ./.github/workflows/charts-test.yaml
+    with:
+      checkoutCommit: ${{ github.sha }}
+      chartChangesDetected: ${{ needs.collect-changes.outputs.changesDetected || 'false' }}
+
+  pre-commit:
+    name: Pre-commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.1
+
+  releasenotes:
+    name: Releasenotes
+    needs: collect-changes
+    if: needs.collect-changes.outputs.changesDetected == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install yq
+        uses: mikefarah/yq@v4.44.6
+
+      - name: Check artifacthub.io/changes for modified charts
+        env:
+          DEFAULT_BRANCH: main
+        run: |
+          set -euo pipefail
+          charts=(${{ needs.collect-changes.outputs.addedOrModifiedCharts }})
+          for chart in "${charts[@]}"; do
+            if [[ -f "charts/${chart}/Chart.yaml" ]]; then
+              echo "Checking releasenotes for ${chart}"
+              ./.github/scripts/check-releasenotes.sh "charts/${chart}"
+            fi
+          done

@@ -1,0 +1,26 @@
+# Minimal overrides for chart-testing install.
+# Subcharts disabled until Bitnami values are wired in the parent chart.
+mariadb:
+  enabled: false
+redis:
+  enabled: false
+env:
+  TZ: UTC
+  DB_HOST: localhost
+  DB_NAME: romm
+  DB_USER: romm
+  DB_PASSWD: ci-password
+  REDIS_HOST: localhost
+  REDIS_PASSWORD: ci-password
+ingress:
+  main:
+    enabled: false
+persistence:
+  assets:
+    enabled: false
+  config:
+    enabled: false
+  library:
+    enabled: false
+  resources:
+    enabled: false

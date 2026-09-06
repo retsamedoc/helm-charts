@@ -1,3 +1,6 @@
 # Minimal overrides for chart-testing install
 env:
-  ESPHOME_DASHBOARD_USE_PING: true
+  TZ: UTC
+ingress:
+  main:
+    enabled: false

@@ -1,21 +1,12 @@
 ---
 apiVersion: v2
-attributes:
-  artifacthub.io/links: |
-    - name: Chart Source
-      url: https://github.com/retsamedoc/helm-charts
-    - name: Common library chart definition
-      url: https://github.com/bjw-s-labs/helm-charts/blob/main/charts/library/common/Chart.yaml
-  catalog.cattle.io/display-name: JuicePassProxy
-  catalog.cattle.io/permits-os: linux
-
+name: juicepassproxy
+description: Proxy UDP requests to/from Juicebox EV chargers to MQTT discoverable by Home Assistant
 home: https://github.com/retsamedoc/helm-charts/tree/main/charts/juicepassproxy
 icon: https://retsamedoc.github.io/helm-charts/logos/juicepass.png
-description: Proxy UDP requests to/from Juicebox EV chargers to MQTT discoverable by Home Assistant
-name: juicepassproxy
 version: 2026.2.4
 appVersion: 0.5.1
-kubeVersion: ">=1.16.0-0"
+kubeVersion: ">=1.25.0-0"
 
 keywords:
   - home-automation
@@ -33,7 +24,17 @@ dependencies:
     version: 4.6.2
 
 annotations:
+  catalog.cattle.io/display-name: JuicePassProxy
+  catalog.cattle.io/os: linux
+  artifacthub.io/links: |
+    - name: Chart Source
+      url: https://github.com/retsamedoc/helm-charts
+    - name: Common library chart definition
+      url: https://github.com/bjw-s-labs/helm-charts/blob/main/charts/library/common/Chart.yaml
+  artifacthub.io/signKey: |
+    fingerprint: REPLACE_AFTER_KEY_GENERATION
+    url: https://retsamedoc.github.io/helm-charts/pgp-public-key.asc
   artifacthub.io/changes: |-
     - kind: changed
       description: |-
-        Upgraded the common library to v4.6.2
+        Chart hygiene — Rancher/Artifact Hub annotations, signKey placeholder, Chart.lock

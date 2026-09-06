@@ -2,7 +2,7 @@
 # IMPORTANT NOTE
 #
 # This chart inherits from the common library chart. You can check the default values/options here:
-# https://github.com/bjw-s/helm-charts/blob/main/charts/library/common/values.yaml
+# https://github.com/bjw-s-labs/helm-charts/blob/main/charts/library/common/values.yaml
 #
 
 image:
@@ -26,7 +26,7 @@ env:
   # -- Override when the wind speed and bearing is updated.
   # Default is 0 (as soon as possible)
   RAPID_WIND_INTERVAL: "0"
-  # -- Enable more debug data in the Container Log. 
+  # -- Enable more debug data in the Container Log.
   DEBUG: "False"
   # -- Set the hight above sea level for where the station is placed. This is used when calculating some of the sensor values and should be the station elevation plus device height above ground.
   # The value has to be in meters (meters = feet * 0.3048).
@@ -35,8 +35,8 @@ env:
   LATITUDE: "00.0000"
   # -- Longitude where the Station is located.
   LONGITUDE: "000.0000"
-  # -- All Time Low Sea Level Pressure. 
-  # Default is 960 (Mb for Metric) or Default is 28.35 (inHG for Imperial) 
+  # -- All Time Low Sea Level Pressure.
+  # Default is 960 (Mb for Metric) or Default is 28.35 (inHG for Imperial)
   ZAMBRETTI_MIN_PRESSURE: "960"
   # -- All Time High Sea Level Pressure.
   # Default is 1060 (Mb for Metric) or Default is 31.30 (inHG for Imperial)
