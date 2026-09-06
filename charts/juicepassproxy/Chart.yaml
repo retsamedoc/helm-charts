@@ -4,7 +4,7 @@ name: juicepassproxy
 description: Proxy UDP requests to/from Juicebox EV chargers to MQTT discoverable by Home Assistant
 home: https://github.com/retsamedoc/helm-charts/tree/main/charts/juicepassproxy
 icon: https://retsamedoc.github.io/helm-charts/logos/juicepass.png
-version: 2026.2.4
+version: 2026.2.5
 appVersion: 0.5.1
 kubeVersion: ">=1.25.0-0"
 
@@ -37,4 +37,4 @@ annotations:
   artifacthub.io/changes: |-
     - kind: changed
       description: |-
-        Chart hygiene — Rancher/Artifact Hub annotations, signKey placeholder, Chart.lock
+        Chart hygiene — Rancher/Artifact Hub annotations, signKey, Chart.lock, and CI install values
