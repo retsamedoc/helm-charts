@@ -16,7 +16,7 @@ sources:
   - https://github.com/retsamedoc/helm-charts/tree/main/charts/retrom
 
 maintainers:
-  - name: Zach Schimke
+  - name: retsamedoc
     email: retsamedoc@digitalactionsproject.org
 
 dependencies:

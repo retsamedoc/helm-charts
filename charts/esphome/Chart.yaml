@@ -16,7 +16,7 @@ sources:
   - https://github.com/esphome/esphome
 
 maintainers:
-  - name: Zach Schimke
+  - name: retsamedoc
     email: retsamedoc@digitalactionsproject.org
 
 dependencies:

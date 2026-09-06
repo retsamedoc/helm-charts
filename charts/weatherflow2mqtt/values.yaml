@@ -7,7 +7,7 @@
 
 image:
   # -- image repository
-  repository:  briis/weatherflow2mqtt
+  repository: briis/weatherflow2mqtt
   # -- image tag
   tag: 3.1.6
   # -- image pull policy
@@ -60,7 +60,7 @@ env:
   # -- our personal access Token to allow retrieval of data. If you don't have the token login with your account and create the token. NOTE You must own a WeatherFlow station to get this token
   STATION_TOKEN:
   # -- retrieve Forecast Data from WeatherFlow. If set to True, STATION_ID and STATION_TOKEN must be filled also. NOTE If this is enabled the component will access the Internet to get the Forecast data.
-  ADD_FORECAST: False
+  ADD_FORECAST: false
   # -- interval in minutes, between updates of the Forecast data.
   # Default value is 30 minutes.
   FORECAST_INTERVAL: "30"

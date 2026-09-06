@@ -17,7 +17,7 @@ sources:
   - https://github.com/briis/hass-weatherflow2mqtt
 
 maintainers:
-  - name: Zach Schimke
+  - name: retsamedoc
     email: retsamedoc@digitalactionsproject.org
 
 dependencies:

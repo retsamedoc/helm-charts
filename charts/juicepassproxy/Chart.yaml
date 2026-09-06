@@ -15,7 +15,7 @@ sources:
   - https://github.com/JuiceRescue/juicepassproxy
 
 maintainers:
-  - name: Zach Schimke
+  - name: retsamedoc
     email: retsamedoc@digitalactionsproject.org
 
 dependencies:
