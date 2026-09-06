@@ -5,5 +5,71 @@
 {{- define "custom.custom.configuration" -}}
 {{ template "custom.custom.configuration.header" . }}
 
-N/A
+JuicePass Proxy speaks **UDP on port 8047**. On k3s with the bundled Traefik ingress controller you typically need both of the following (cluster Traefik config is **not** managed by this chart).
+
+### 1. Expose a UDP entrypoint on Traefik (k3s)
+
+Create or patch a `HelmChartConfig` for Traefik so it listens on UDP `8047` (entrypoint name is arbitrary; examples use `juicepass`):
+
+```yaml
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  valuesContent: |-
+    ports:
+      juicepass:
+        port: 8047
+        exposedPort: 8047
+        expose:
+          default: true
+        protocol: UDP
+```
+
+Apply this once per cluster (or merge with your existing Traefik `valuesContent`).
+
+### 2. Route that entrypoint to this chart’s Service
+
+Point an `IngressRouteUDP` at the Service this chart creates (name depends on your release; check `kubectl get svc -n <namespace>`):
+
+```yaml
+apiVersion: traefik.io/v1alpha1
+kind: IngressRouteUDP
+metadata:
+  name: juicepassproxy-proxy-ingressroute
+  namespace: automation   # same namespace as the release
+spec:
+  entryPoints:
+    - juicepass          # must match the Traefik port key above
+  routes:
+    - services:
+        - name: juicepassproxy   # replace with your Service name
+          port: 8047
+```
+
+You can keep that manifest outside Helm, or render it with this chart via common [`rawResources`](https://github.com/retsamedoc/helm-charts/tree/main/charts/common):
+
+```yaml
+rawResources:
+  ingressRouteUDP:
+    enabled: true
+    forceRename: juicepassproxy-proxy-ingressroute
+    manifest:
+      apiVersion: traefik.io/v1alpha1
+      kind: IngressRouteUDP
+      spec:
+        entryPoints:
+          - juicepass
+        routes:
+          - services:
+              - name: juicepassproxy   # replace with your Service name
+                port: 8047
+```
+
+### Alternatives
+
+- **hostNetwork** / **NodePort** / **LoadBalancer** with `protocol: UDP` if you are not using Traefik for UDP.
+- Gateway API **UDPRoute** is supported by the common library when your gateway controller implements it; Traefik’s `IngressRouteUDP` remains the usual path on stock k3s Traefik.
 {{- end -}}
