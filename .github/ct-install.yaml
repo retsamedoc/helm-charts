@@ -8,6 +8,7 @@ chart-dirs:
 # (template already on common 4.x). esphome/retrom/romm render on common 4.x
 # but stay excluded until install CI values are hardened for real app startup.
 excluded-charts:
+  - common
   - esphome
   - retrom
   - romm

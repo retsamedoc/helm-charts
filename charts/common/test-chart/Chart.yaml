@@ -1,0 +1,12 @@
+---
+apiVersion: v2
+name: common-test
+description: Test wrapper for the common library chart (not published)
+type: application
+version: 0.1.0
+appVersion: "0.0.0"
+
+dependencies:
+  - name: common
+    version: 26.9.0
+    repository: file://..

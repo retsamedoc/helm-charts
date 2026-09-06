@@ -99,14 +99,54 @@ jobs:
       - name: Run chart-testing (install)
         run: ct install --config .github/ct-install.yaml --charts ${{ matrix.chart }}
 
+  unittest-common:
+    name: Unit test common library
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.checkoutCommit }}
+
+      - name: Detect common chart changes
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            common:
+              - 'charts/common/**'
+
+      - name: Install Helm
+        if: steps.filter.outputs.common == 'true'
+        uses: azure/setup-helm@v5
+        with:
+          version: v3.16.4
+
+      - name: Install helm-unittest
+        if: steps.filter.outputs.common == 'true'
+        run: helm plugin install https://github.com/helm-unittest/helm-unittest.git --version v0.7.2
+
+      - name: Update test-chart dependencies
+        if: steps.filter.outputs.common == 'true'
+        run: helm dependency update charts/common/test-chart
+
+      - name: Run helm unittest
+        if: steps.filter.outputs.common == 'true'
+        run: helm unittest -f 'unittests/*_test.yaml' charts/common/test-chart
+
   install_success:
     needs:
       - generate-install-matrix
       - install-charts
+      - unittest-common
     if: always()
     name: Install successful
     runs-on: ubuntu-latest
     steps:
       - name: Check install matrix status
         if: ${{ (needs.generate-install-matrix.outputs.detected == 'true') && (needs.install-charts.result != 'success') }}
+        run: exit 1
+      - name: Check common unittest status
+        if: ${{ needs.unittest-common.result != 'success' }}
         run: exit 1

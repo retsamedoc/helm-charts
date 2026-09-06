@@ -31,6 +31,6 @@ Signed packages: see [SIGNING.md](SIGNING.md) for PGP provenance and cosign veri
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Chart work uses `feat/$chartname-$target_version`; repo-only work uses `chore/…`. PRs must pass CI and are squash-merged to `main`.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Chart versions use [CalVer](https://calver.org/) `YY.M.r`. Chart work uses `feat/$chartname-$target_version`; repo-only work uses `chore/…`. PRs must pass CI and are squash-merged to `main`.
 
 Reference chart: [`charts/juicepassproxy`](charts/juicepassproxy).

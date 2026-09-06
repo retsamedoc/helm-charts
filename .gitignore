@@ -8,7 +8,11 @@
 
 # Helm dependency packages (Chart.lock is committed)
 charts/*/charts/*.tgz
+charts/*/test-chart/charts/*.tgz
 
 # Local tooling
 .direnv/
 .mise.local.toml
+.helm-cache/
+.helm-config/
+.helm-data/

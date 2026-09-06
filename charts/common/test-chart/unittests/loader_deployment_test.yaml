@@ -1,0 +1,48 @@
+suite: loader deployment and service
+templates:
+  - common.yaml
+tests:
+  - it: should render a Deployment and Service
+    set:
+      controllers:
+        main:
+          containers:
+            main:
+              image:
+                repository: nginx
+                tag: "1.27"
+      service:
+        main:
+          controller: main
+          ports:
+            http:
+              port: 80
+    asserts:
+      - containsDocument:
+          apiVersion: apps/v1
+          kind: Deployment
+          name: release-name
+          any: true
+      - containsDocument:
+          apiVersion: v1
+          kind: Service
+          name: release-name
+          any: true
+      - documentSelector:
+          path: kind
+          value: Deployment
+        equal:
+          path: metadata.name
+          value: release-name
+      - documentSelector:
+          path: kind
+          value: Deployment
+        equal:
+          path: spec.template.spec.containers[0].image
+          value: nginx:1.27
+      - documentSelector:
+          path: kind
+          value: Service
+        equal:
+          path: spec.ports[0].port
+          value: 80
