@@ -30,7 +30,7 @@ Add GitHub Actions **secrets** (Settings → Secrets and variables → Actions):
 | `HELM_GPG_KEY_NAME` | Key uid / email used with `helm package --sign --key` |
 | `HELM_GPG_FINGERPRINT` | 40-char fingerprint (no spaces) |
 
-After creating the key, replace `REPLACE_AFTER_KEY_GENERATION` in every chart’s `annotations.artifacthub.io/signKey` fingerprint (and in `template/chart`) with `HELM_GPG_FINGERPRINT`.
+Charts and `template/chart` use fingerprint `40D16531ADC81528315B65664C77EFEB7F669F40` in `artifacthub.io/signKey`. If you rotate the key, update that annotation everywhere to match `HELM_GPG_FINGERPRINT`.
 
 The release workflow exports the public key to `https://retsamedoc.github.io/helm-charts/pgp-public-key.asc` on each release.
 

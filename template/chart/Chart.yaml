@@ -31,7 +31,7 @@ annotations:
     - name: Common library chart definition
       url: https://github.com/bjw-s-labs/helm-charts/blob/main/charts/library/common/Chart.yaml
   artifacthub.io/signKey: |
-    fingerprint: REPLACE_AFTER_KEY_GENERATION
+    fingerprint: 40D16531ADC81528315B65664C77EFEB7F669F40
     url: https://retsamedoc.github.io/helm-charts/pgp-public-key.asc
   artifacthub.io/changes: |-
     - kind: added
