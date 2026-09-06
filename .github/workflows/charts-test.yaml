@@ -87,7 +87,10 @@ jobs:
       - name: Create k3d cluster
         uses: nolar/setup-k3d-k3s@v1
         with:
-          version: v1.28
+          # Partial minors like v1.28 fall out of recent k3s releases and are
+          # used as-is (rancher/k3s:v1.28), which is not a real image tag.
+          version: v1.33
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Remove node taints
         run: |
