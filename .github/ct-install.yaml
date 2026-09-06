@@ -3,8 +3,10 @@ target-branch: main
 helm-extra-args: --timeout 600s
 chart-dirs:
   - charts
-# Install only charts that render on common 4.x controllers API.
-# Others remain lint-only until values migration (see CONTRIBUTING.md).
+# Install only charts that are smoke-testable in k3d.
+# weatherflow2mqtt remains excluded until its values use the controllers API
+# (template already on common 4.x). esphome/retrom/romm render on common 4.x
+# but stay excluded until install CI values are hardened for real app startup.
 excluded-charts:
   - esphome
   - retrom
