@@ -5,6 +5,46 @@ entries:
       artifacthub.io/changes: |-
         - kind: changed
           description: |-
+            Migrate templates/values to bjw-s common 4.x controllers API; chart hygiene
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/retsamedoc/helm-charts
+        - name: Common library chart definition
+          url: https://github.com/bjw-s-labs/helm-charts/blob/main/charts/library/common/Chart.yaml
+      artifacthub.io/signKey: |
+        fingerprint: 40D16531ADC81528315B65664C77EFEB7F669F40
+        url: https://retsamedoc.github.io/helm-charts/pgp-public-key.asc
+      catalog.cattle.io/display-name: ESPHome
+      catalog.cattle.io/os: linux
+    apiVersion: v2
+    appVersion: 2024.3.0
+    created: "2026-09-07T16:07:26.753861492Z"
+    dependencies:
+    - name: common
+      repository: https://bjw-s-labs.github.io/helm-charts
+      version: 4.6.2
+    description: ESPHome is a system to control your ESP8266/ESP32 by simple yet powerful
+      configuration files and control them remotely through Home Automation systems
+    digest: 3b4546011e17f28aa7c3f11134480a8ce811919876b53c857ca627eaeab1415a
+    home: https://github.com/retsamedoc/helm-charts/tree/main/charts/esphome
+    icon: https://raw.githubusercontent.com/esphome/esphome-docs/v1.16.2/_static/favicon-256x256.png
+    keywords:
+    - esphome
+    - home-automation
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: retsamedoc@digitalactionsproject.org
+      name: retsamedoc
+    name: esphome
+    sources:
+    - https://github.com/esphome/esphome
+    urls:
+    - esphome-2026.2.5.tgz
+    version: 2026.2.5
+  - annotations:
+      artifacthub.io/changes: |-
+        - kind: changed
+          description: |-
             Upgraded the common library to v4.6.2
     apiVersion: v2
     appVersion: 2024.3.0
@@ -148,7 +188,84 @@ entries:
     urls:
     - https://github.com/retsamedoc/helm-charts/releases/download/juicepassproxy-2026.2.2/juicepassproxy-2026.2.2.tgz
     version: 2026.2.2
+  - annotations:
+      artifacthub.io/changes: |-
+        - kind: changed
+          description: |-
+            Migrate to in-repo common library 26.9.0 (retsamedoc.common.*)
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/retsamedoc/helm-charts/tree/main/charts/juicepassproxy
+        - name: Common library
+          url: https://github.com/retsamedoc/helm-charts/tree/main/charts/common
+      artifacthub.io/signKey: |
+        fingerprint: 40D16531ADC81528315B65664C77EFEB7F669F40
+        url: https://retsamedoc.github.io/helm-charts/pgp-public-key.asc
+      catalog.cattle.io/display-name: JuicePassProxy
+      catalog.cattle.io/os: linux
+    apiVersion: v2
+    appVersion: 0.5.1
+    created: "2026-09-07T16:07:26.953938632Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 26.9.0
+    description: Proxy UDP requests to/from Juicebox EV chargers to MQTT discoverable
+      by Home Assistant
+    digest: 33fd5a4ccbc0874fbe38206f22d2304f7010ba2808343a0e23518aed95aa5ee5
+    home: https://github.com/retsamedoc/helm-charts/tree/main/charts/juicepassproxy
+    icon: https://retsamedoc.github.io/helm-charts/logos/juicepass.png
+    keywords:
+    - home-automation
+    kubeVersion: '>=1.31.0-0'
+    maintainers:
+    - email: retsamedoc@digitalactionsproject.org
+      name: retsamedoc
+    name: juicepassproxy
+    sources:
+    - https://github.com/JuiceRescue/juicepassproxy
+    urls:
+    - juicepassproxy-26.9.0.tgz
+    version: 26.9.0
   retrom:
+  - annotations:
+      artifacthub.io/changes: |-
+        - kind: changed
+          description: |-
+            Migrate templates/values to bjw-s common 4.x controllers API; chart hygiene
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/retsamedoc/helm-charts/tree/main/charts/retrom
+      artifacthub.io/signKey: |
+        fingerprint: 40D16531ADC81528315B65664C77EFEB7F669F40
+        url: https://retsamedoc.github.io/helm-charts/pgp-public-key.asc
+      catalog.cattle.io/display-name: Retrom
+      catalog.cattle.io/os: linux
+    apiVersion: v2
+    appVersion: 0.7.14
+    created: "2026-09-07T16:07:27.221505721Z"
+    dependencies:
+    - name: common
+      repository: https://bjw-s-labs.github.io/helm-charts
+      version: 4.6.2
+    description: A centralized game library/collection management service with a focus
+      on emulation
+    digest: a71536e911a6b7c5b9a738057e0e5b08d9a5fe86ddd50ead2dfc650ae9f94744
+    home: https://github.com/retsamedoc/helm-charts/tree/main/charts/retrom
+    icon: https://raw.githubusercontent.com/JMBeresford/retrom/refs/heads/main/packages/client/icons/icon.png
+    keywords:
+    - retrom
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: retsamedoc@digitalactionsproject.org
+      name: retsamedoc
+    name: retrom
+    sources:
+    - https://github.com/JMBeresford/retrom
+    - https://github.com/retsamedoc/helm-charts/tree/main/charts/retrom
+    urls:
+    - retrom-2026.2.5.tgz
+    version: 2026.2.5
   - annotations:
       artifacthub.io/changes: |-
         - kind: changed
@@ -230,6 +347,52 @@ entries:
     - https://github.com/retsamedoc/helm-charts/releases/download/retrom-0.0.1/retrom-0.0.1.tgz
     version: 0.0.1
   romm:
+  - annotations:
+      artifacthub.io/changes: |-
+        - kind: changed
+          description: |-
+            Migrate templates/values to bjw-s common 4.x controllers API; chart hygiene
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/retsamedoc/helm-charts/tree/main/charts/romm
+      artifacthub.io/signKey: |
+        fingerprint: 40D16531ADC81528315B65664C77EFEB7F669F40
+        url: https://retsamedoc.github.io/helm-charts/pgp-public-key.asc
+      catalog.cattle.io/display-name: RomM
+      catalog.cattle.io/os: linux
+    apiVersion: v2
+    appVersion: 3.8.1
+    created: "2026-09-07T16:07:27.55386648Z"
+    dependencies:
+    - name: common
+      repository: https://bjw-s-labs.github.io/helm-charts
+      version: 4.6.2
+    - condition: mariadb.enabled
+      name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      version: 20.4.2
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 20.11.4
+    description: A beautiful, powerful, self-hosted rom manager and player.
+    digest: e7ff6a63b61eafa02582a7e8b3b691c84e6a9fd93bd0bb542d21537a779e1269
+    home: https://github.com/retsamedoc/helm-charts/tree/main/charts/romm
+    icon: https://romm.app/_ipx/q_80/images/blocks/logos/romm.svg
+    keywords:
+    - romm
+    - rom-manager
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: retsamedoc@digitalactionsproject.org
+      name: retsamedoc
+    name: romm
+    sources:
+    - https://github.com/rommapp/romm
+    - https://github.com/retsamedoc/helm-charts/tree/main/charts/romm
+    urls:
+    - romm-2026.2.5.tgz
+    version: 2026.2.5
   - annotations:
       artifacthub.io/changes: |-
         - kind: changed
@@ -335,6 +498,46 @@ entries:
     - https://github.com/retsamedoc/helm-charts/releases/download/romm-2025.3.0/romm-2025.3.0.tgz
     version: 2025.3.0
   weatherflow2mqtt:
+  - annotations:
+      artifacthub.io/changes: |-
+        - kind: changed
+          description: |-
+            Chart hygiene — annotations, appVersion, signKey, and Chart.lock
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/retsamedoc/helm-charts
+        - name: Common library chart definition
+          url: https://github.com/bjw-s-labs/helm-charts/blob/main/charts/library/common/Chart.yaml
+      artifacthub.io/signKey: |
+        fingerprint: 40D16531ADC81528315B65664C77EFEB7F669F40
+        url: https://retsamedoc.github.io/helm-charts/pgp-public-key.asc
+      catalog.cattle.io/display-name: Weatherflow to MQTT Bridge
+      catalog.cattle.io/os: linux
+    apiVersion: v2
+    appVersion: 3.1.6
+    created: "2026-09-07T16:07:27.825375132Z"
+    dependencies:
+    - name: common
+      repository: https://bjw-s-labs.github.io/helm-charts
+      version: 4.6.2
+    description: WeatherFlow to MQTT for Home Assistant
+    digest: 9a01c9e72b67a7c70a66a827cf1c700d16656d99914ac798fa04901b64d275a1
+    home: https://github.com/retsamedoc/helm-charts/tree/main/charts/weatherflow2mqtt
+    icon: https://avatars.githubusercontent.com/u/605023?s=200&v=4
+    keywords:
+    - weatherflow
+    - home-automation
+    - mqtt
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: retsamedoc@digitalactionsproject.org
+      name: retsamedoc
+    name: weatherflow2mqtt
+    sources:
+    - https://github.com/briis/hass-weatherflow2mqtt
+    urls:
+    - weatherflow2mqtt-0.1.3.tgz
+    version: 0.1.3
   - apiVersion: v2
     created: "2023-03-25T23:28:23.473218988Z"
     dependencies:
@@ -353,4 +556,4 @@ entries:
     urls:
     - https://github.com/retsamedoc/helm-charts/releases/download/weatherflow2mqtt-0.1.2/weatherflow2mqtt-0.1.2.tgz
     version: 0.1.2
-generated: "2026-02-04T17:26:59.380327676Z"
+generated: "2026-09-07T16:07:27.825422561Z"
