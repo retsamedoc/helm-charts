@@ -5,4 +5,7 @@
 {{- define "custom.custom.configuration" -}}
 {{ template "custom.custom.configuration.header" . }}
 
+Retrom 0.8 serves the web UI from the service on **port 5101** (`/web`). Port 3000 is no longer used.
+
+Mount your ROM library at `/app/library`. `config` and `data` persist the embedded database and settings. On large libraries over k3s `local-path`, set `SKIP_RECURSIVE_CHOWN=true` so startup does not recursively `chown` the library.
 {{- end -}}

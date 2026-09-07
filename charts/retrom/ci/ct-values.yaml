@@ -1,17 +1,22 @@
-# Minimal overrides for chart-testing
+# Minimal overrides for chart-testing install.
+# The service expects a library and embedded Postgres data dir;
+# sleep so CI validates render + deploy, not a real scan.
 controllers:
   main:
     containers:
       main:
+        command:
+          - sleep
+          - infinity
         env:
           TZ: UTC
-ingress:
-  main:
-    enabled: false
 persistence:
   config:
     enabled: false
   data:
     enabled: false
   library:
+    enabled: false
+ingress:
+  main:
     enabled: false
