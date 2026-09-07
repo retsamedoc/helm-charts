@@ -1,5 +1,40 @@
 apiVersion: v1
 entries:
+  common:
+  - annotations:
+      artifacthub.io/changes: |-
+        - kind: added
+          description: |-
+            Initial common library chart (retsamedoc.common.* helpers), Gateway route/BackendTLSPolicy support, and pre-consumer API cleanups
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/retsamedoc/helm-charts/tree/main/charts/common
+      artifacthub.io/signKey: |
+        fingerprint: 40D16531ADC81528315B65664C77EFEB7F669F40
+        url: https://retsamedoc.github.io/helm-charts/pgp-public-key.asc
+      catalog.cattle.io/display-name: Common Library
+      catalog.cattle.io/hidden: "true"
+      catalog.cattle.io/os: linux
+    apiVersion: v2
+    created: "2026-09-07T16:11:39.80119588Z"
+    description: Function library for Helm charts
+    digest: f4b603cb381c05a3ac0408a5ec66043d004ef3ad5722ef154a4c7e0f1b4dedbe
+    home: https://github.com/retsamedoc/helm-charts/tree/main/charts/common
+    icon: https://retsamedoc.github.io/helm-charts/logos/common.png
+    keywords:
+    - common
+    - library
+    kubeVersion: '>=1.31.0-0'
+    maintainers:
+    - email: retsamedoc@digitalactionsproject.org
+      name: retsamedoc
+    name: common
+    sources:
+    - https://github.com/retsamedoc/helm-charts/tree/main/charts/common
+    type: library
+    urls:
+    - common-26.9.0.tgz
+    version: 26.9.0
   esphome:
   - annotations:
       artifacthub.io/changes: |-
@@ -556,4 +591,4 @@ entries:
     urls:
     - https://github.com/retsamedoc/helm-charts/releases/download/weatherflow2mqtt-0.1.2/weatherflow2mqtt-0.1.2.tgz
     version: 0.1.2
-generated: "2026-09-07T16:07:27.825422561Z"
+generated: "2026-09-07T16:11:40.645576548Z"
