@@ -3,8 +3,8 @@ apiVersion: v2
 name: romm
 description: A beautiful, powerful, self-hosted rom manager and player.
 home: https://github.com/retsamedoc/helm-charts/tree/main/charts/romm
-icon: https://romm.app/_ipx/q_80/images/blocks/logos/romm.svg
-version: 26.9.0
+icon: https://retsamedoc.github.io/helm-charts/logos/romm.png
+version: 26.9.1
 appVersion: 5.2.0
 kubeVersion: ">=1.31.0-0"
 
@@ -43,4 +43,4 @@ annotations:
   artifacthub.io/changes: |-
     - kind: changed
       description: |-
-        Migrate to in-repo common 26.9.0 and RomM 5.2.0; optional MariaDB, internal Valkey
+        Host the chart icon at logos/romm.png
