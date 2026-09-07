@@ -423,6 +423,48 @@ entries:
     urls:
     - juicepassproxy-26.9.0.tgz
     version: 26.9.0
+  otbr:
+  - annotations:
+      artifacthub.io/changes: |-
+        - kind: added
+          description: Initial chart
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/retsamedoc/helm-charts/tree/main/charts/otbr
+        - name: Common library
+          url: https://github.com/retsamedoc/helm-charts/tree/main/charts/common
+      artifacthub.io/signKey: |
+        fingerprint: 40D16531ADC81528315B65664C77EFEB7F669F40
+        url: https://retsamedoc.github.io/helm-charts/pgp-public-key.asc
+      catalog.cattle.io/display-name: OpenThread Border Router
+      catalog.cattle.io/os: linux
+    apiVersion: v2
+    appVersion: v2026.09.0
+    created: "2026-09-07T22:40:54.006915773Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 26.9.0
+    description: OpenThread Border Router (OTBR) connects a Thread network to the
+      host infrastructure network
+    digest: ff928179bf9e0faae822ac59d17cba4f68ecd643b846ca69a7db1dfb619300a5
+    home: https://github.com/retsamedoc/helm-charts/tree/main/charts/otbr
+    icon: https://retsamedoc.github.io/helm-charts/logos/otbr.png
+    keywords:
+    - otbr
+    - openthread
+    - thread
+    - border-router
+    kubeVersion: '>=1.31.0-0'
+    maintainers:
+    - email: retsamedoc@digitalactionsproject.org
+      name: retsamedoc
+    name: otbr
+    sources:
+    - https://github.com/openthread/ot-br-posix
+    urls:
+    - otbr-26.9.0.tgz
+    version: 26.9.0
   retrom:
   - annotations:
       artifacthub.io/changes: |-
@@ -821,6 +863,89 @@ entries:
     urls:
     - romm-26.9.0.tgz
     version: 26.9.0
+  searxng:
+  - annotations:
+      artifacthub.io/changes: |-
+        - kind: added
+          description: Initial chart
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/retsamedoc/helm-charts/tree/main/charts/searxng
+        - name: Common library
+          url: https://github.com/retsamedoc/helm-charts/tree/main/charts/common
+      artifacthub.io/signKey: |
+        fingerprint: 40D16531ADC81528315B65664C77EFEB7F669F40
+        url: https://retsamedoc.github.io/helm-charts/pgp-public-key.asc
+      catalog.cattle.io/display-name: SearXNG
+      catalog.cattle.io/os: linux
+    apiVersion: v2
+    appVersion: 2026.9.7-3e454637f
+    created: "2026-09-07T22:40:54.366606784Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 26.9.0
+    description: SearXNG is a privacy-respecting metasearch engine. Users are neither
+      tracked nor profiled.
+    digest: 97c4a5941aafbdfe6ec0853df48c66a188c1490061840bf73b366446f9f0c5a7
+    home: https://github.com/retsamedoc/helm-charts/tree/main/charts/searxng
+    icon: https://retsamedoc.github.io/helm-charts/logos/searxng.png
+    keywords:
+    - searxng
+    - search
+    - metasearch
+    - privacy
+    kubeVersion: '>=1.31.0-0'
+    maintainers:
+    - email: retsamedoc@digitalactionsproject.org
+      name: retsamedoc
+    name: searxng
+    sources:
+    - https://github.com/searxng/searxng
+    urls:
+    - searxng-26.9.0.tgz
+    version: 26.9.0
+  spoolman:
+  - annotations:
+      artifacthub.io/changes: |-
+        - kind: added
+          description: Initial chart
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/retsamedoc/helm-charts/tree/main/charts/spoolman
+        - name: Common library
+          url: https://github.com/retsamedoc/helm-charts/tree/main/charts/common
+      artifacthub.io/signKey: |
+        fingerprint: 40D16531ADC81528315B65664C77EFEB7F669F40
+        url: https://retsamedoc.github.io/helm-charts/pgp-public-key.asc
+      catalog.cattle.io/display-name: Spoolman
+      catalog.cattle.io/os: linux
+    apiVersion: v2
+    appVersion: 0.26.1
+    created: "2026-09-07T22:40:54.494904875Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 26.9.0
+    description: Spoolman is a self-hosted inventory manager for 3D-printer filament
+      spools
+    digest: 851288f22cf921355b3863b34c1298b293e43ada19ded76e331830fb51518dec
+    home: https://github.com/retsamedoc/helm-charts/tree/main/charts/spoolman
+    icon: https://retsamedoc.github.io/helm-charts/logos/spoolman.png
+    keywords:
+    - spoolman
+    - 3d-printing
+    - inventory
+    kubeVersion: '>=1.31.0-0'
+    maintainers:
+    - email: retsamedoc@digitalactionsproject.org
+      name: retsamedoc
+    name: spoolman
+    sources:
+    - https://github.com/Donkie/Spoolman
+    urls:
+    - spoolman-26.9.0.tgz
+    version: 26.9.0
   weatherflow2mqtt:
   - annotations:
       artifacthub.io/changes: |-
@@ -880,4 +1005,4 @@ entries:
     urls:
     - https://github.com/retsamedoc/helm-charts/releases/download/weatherflow2mqtt-0.1.2/weatherflow2mqtt-0.1.2.tgz
     version: 0.1.2
-generated: "2026-09-07T19:22:56.495772151Z"
+generated: "2026-09-07T22:40:54.494951152Z"
