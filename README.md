@@ -1,6 +1,8 @@
 [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/retsamedoc)](https://artifacthub.io/packages/search?repo=retsamedoc)
 
-Helm charts for home-lab apps, published as a classic Helm repository on GitHub Pages and as OCI packages on GHCR.
+Helm charts for home-lab apps that do not publish an official chart, published as a classic Helm repository on GitHub Pages and as OCI packages on GHCR.
+
+If the upstream project already ships a Helm chart, use that. This repository is for the gaps: apps you run on a homelab (k3s + Rancher) that have no official chart to install.
 
 ## Usage
 
