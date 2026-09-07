@@ -1,16 +1,12 @@
 remote: origin
 target-branch: main
 helm-extra-args: --timeout 600s
-# App charts are migrating from YYYY.M.r (e.g. 2026.2.5) to YY.M.r CalVer
-# (e.g. 26.9.0). SemVer comparison treats that as a downgrade, so ct's
-# version-increment check fails. Keep disabled until every chart uses YY.M.r,
-# then set back to true.
-check-version-increment: false
+# All charts use YY.M.r. Require a SemVer bump on changes.
+check-version-increment: true
 chart-dirs:
   - charts
 excluded-charts:
 chart-repos:
   - bitnami=https://charts.bitnami.com/bitnami
-  - library=https://bjw-s-labs.github.io/helm-charts
   - retsamedoc=https://retsamedoc.github.io/helm-charts
   - jetstack=https://charts.jetstack.io

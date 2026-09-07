@@ -10,6 +10,5 @@ excluded-charts:
   - common
 chart-repos:
   - bitnami=https://charts.bitnami.com/bitnami
-  - library=https://bjw-s-labs.github.io/helm-charts
   - retsamedoc=https://retsamedoc.github.io/helm-charts
   - jetstack=https://charts.jetstack.io

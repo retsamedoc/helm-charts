@@ -6,8 +6,7 @@ alwaysApply: false
 
 # Chart.yaml hygiene
 
-- **`version`**: always full CalVer `YY.M.r` (e.g. `26.9.0`). Never omit `.r` in Chart.yaml.
-- One-time migration from old **`YYYY.M.r`** (e.g. `2026.2.5` → `26.9.0`) is intentional; `ct lint` version-increment is disabled in `.github/ct-lint.yaml` until all charts use `YY.M.r`.
+- **`version`**: always full CalVer `YY.M.r` (e.g. `26.9.0`). Never omit `.r` in Chart.yaml. `ct lint` requires the version to increase versus `main`.
 - **`artifacthub.io/changes`**: update whenever `version` bumps (required by releasenotes CI).
 - **`artifacthub.io/signKey`**: always present (fingerprint + Pages pubkey URL). See SIGNING.md.
 - **Rancher**: `catalog.cattle.io/display-name` and `catalog.cattle.io/os: linux`.
