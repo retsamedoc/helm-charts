@@ -1,0 +1,30 @@
+OpenThread Border Router is not reachable as a normal ClusterIP app.
+
+{{- $hostNetwork := false }}
+{{- with (index .Values.controllers "main") }}
+{{- if and .pod .pod.hostNetwork }}
+{{- $hostNetwork = true }}
+{{- end }}
+{{- end }}
+
+{{- if $hostNetwork }}
+
+hostNetwork is enabled. The Service is not the supported path.
+The web UI listens on 8080 inside the node network namespace.
+The image binds 127.0.0.1 unless OT_WEB_LISTEN_ADDR=0.0.0.0.
+
+  On the node (default bind):  http://127.0.0.1:8080
+  From the LAN (after 0.0.0.0): http://<node-ip>:8080
+  REST API (web UI topology):   port 8081 on that same host
+{{- else }}
+
+hostNetwork is false. This install will not form a Thread network.
+The web process binds 127.0.0.1:8080 by default, so port-forward works and the Service does not
+until you set OT_WEB_LISTEN_ADDR=0.0.0.0.
+
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  kubectl -n {{ .Release.Namespace }} port-forward "$POD_NAME" 8080:8080 8081:8081
+  echo "Open http://127.0.0.1:8080"
+
+To run a border router, enable hostNetwork, NET_ADMIN, the RCP and /dev/net/tun mounts, OT_RCP_DEVICE, and OT_INFRA_IF. See README_CONFIG.
+{{- end }}
