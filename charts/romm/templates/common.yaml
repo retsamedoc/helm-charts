@@ -2,10 +2,26 @@
 {{- include "retsamedoc.common.loader.init" . }}
 
 {{- define "app-template.hardcodedValues" -}}
-{{ if not .Values.global.nameOverride }}
+{{- if not .Values.global.nameOverride }}
 global:
   nameOverride: "{{ .Release.Name }}"
-{{ end }}
+{{- end }}
+{{- if .Values.mariadb.enabled }}
+controllers:
+  main:
+    containers:
+      main:
+        env:
+          ROMM_DB_DRIVER: mariadb
+          DB_HOST: {{ include "mariadb.primary.fullname" .Subcharts.mariadb | quote }}
+          DB_PORT: {{ .Values.mariadb.primary.service.ports.mysql | default 3306 | quote }}
+          DB_NAME: {{ .Values.mariadb.auth.database | quote }}
+          DB_USER: {{ .Values.mariadb.auth.username | quote }}
+          DB_PASSWD:
+            secretKeyRef:
+              name: {{ include "mariadb.secretName" .Subcharts.mariadb | quote }}
+              key: mariadb-password
+{{- end }}
 {{- end -}}
 {{- $_ := mergeOverwrite .Values (include "app-template.hardcodedValues" . | fromYaml) -}}
 

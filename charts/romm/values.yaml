@@ -24,7 +24,8 @@ controllers:
           # -- Set the container timezone
           TZ: UTC
 
-          # External database. RomM 5.x does not bundle MariaDB.
+          # External database, or leave unset and enable the optional MariaDB subchart.
+          # When mariadb.enabled is true these are overridden from that subchart.
           # ROMM_DB_DRIVER: mariadb
           DB_HOST: ""
           DB_PORT: "3306"
@@ -122,3 +123,16 @@ persistence:
     size: 1Gi
     globalMounts:
       - path: /redis-data
+
+# Optional bundled MariaDB. Leave disabled to use an external database.
+mariadb:
+  enabled: false
+  auth:
+    database: romm
+    username: romm
+    # Set both before enabling, or leave password empty and let the subchart generate it.
+    password: ""
+    rootPassword: ""
+  primary:
+    persistence:
+      size: 8Gi

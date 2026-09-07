@@ -24,6 +24,10 @@ dependencies:
   - name: common
     repository: file://../common
     version: 26.9.0
+  - name: mariadb
+    version: 20.4.2
+    repository: https://charts.bitnami.com/bitnami
+    condition: mariadb.enabled
 
 annotations:
   catalog.cattle.io/display-name: RomM
@@ -39,4 +43,4 @@ annotations:
   artifacthub.io/changes: |-
     - kind: changed
       description: |-
-        Migrate to in-repo common 26.9.0 and RomM 5.2.0; drop bundled MariaDB/Redis
+        Migrate to in-repo common 26.9.0 and RomM 5.2.0; optional MariaDB, internal Valkey

@@ -20,6 +20,7 @@ Kubernetes: `>=1.31.0-0`
 | Repository | Name | Version |
 |------------|------|---------|
 | file://../common | common | 26.9.0 |
+| https://charts.bitnami.com/bitnami | mariadb | 20.4.2 |
 
 ## TL;DR
 
@@ -68,7 +69,7 @@ helm install romm retsamedoc/romm -f values.yaml
 
 ## Custom configuration
 
-RomM 5.2 listens on **port 8080**. It does not ship a database. Set `DB_HOST`, `DB_USER`, and `DB_PASSWD` to an external MariaDB, MySQL, or Postgres instance (`ROMM_DB_DRIVER` defaults to `mariadb`).
+RomM 5.2 listens on **port 8080**. Enable the optional MariaDB subchart with `mariadb.enabled=true` (set `mariadb.auth.password` and `mariadb.auth.rootPassword`), or point `DB_HOST`, `DB_USER`, and `DB_PASSWD` at an external MariaDB, MySQL, or Postgres instance.
 
 Valkey runs inside the container. Keep `persistence.redis` mounted at `/redis-data`. Library, assets, config, and resources are separate mounts under `/romm`.
 
@@ -98,6 +99,12 @@ controllers:
 | controllers.main.containers.main.image.repository | string | `"ghcr.io/rommapp/romm"` | image repository |
 | controllers.main.containers.main.image.tag | string | `"5.2.0"` | image tag |
 | ingress.main | object | See values.yaml | Enable and configure ingress settings for the chart under this key. |
+| mariadb.auth.database | string | `"romm"` |  |
+| mariadb.auth.password | string | `""` |  |
+| mariadb.auth.rootPassword | string | `""` |  |
+| mariadb.auth.username | string | `"romm"` |  |
+| mariadb.enabled | bool | `false` |  |
+| mariadb.primary.persistence.size | string | `"8Gi"` |  |
 | persistence | object | See values.yaml | Configure persistence settings for the chart under this key. |
 | service | object | See values.yaml | Configures service settings for the chart. Normally this does not need to be modified. |
 
