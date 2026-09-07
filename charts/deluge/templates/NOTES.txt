@@ -1,0 +1,5 @@
+1. Get the application URL by running these commands:
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  echo "Visit via: kubectl -n {{ .Release.Namespace }} port-forward $POD_NAME 8112:8112"
+  echo "Open http://127.0.0.1:8112"
+  echo "Default login is admin / deluge — change it immediately."
