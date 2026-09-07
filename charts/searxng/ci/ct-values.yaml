@@ -1,0 +1,10 @@
+# Minimal overrides for chart-testing install.
+# Default values already mount a settings ConfigMap and writable cache so the
+# image can listen on 8080 without Valkey or external search engines.
+controllers:
+  main:
+    containers:
+      main:
+        env:
+          TZ: UTC
+          SEARXNG_LIMITER: "false"
