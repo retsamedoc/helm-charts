@@ -1,0 +1,140 @@
+#
+# IMPORTANT NOTE
+#
+# This chart inherits from our common library chart. You can check the default values/options here:
+# https://github.com/retsamedoc/helm-charts/blob/main/charts/common/values.yaml
+#
+
+controllers:
+  main:
+    # Recreate so an optional RWO config PVC is not attached by two pods.
+    strategy: Recreate
+    # Kubernetes Service env injection (SEARXNG_PORT=tcp://...) crashes the image
+    # unless service links stay off. The common library already defaults this to false.
+    enableServiceLinks: false
+
+    containers:
+      main:
+        image:
+          # -- image repository
+          repository: docker.io/searxng/searxng
+          # -- image tag
+          tag: 2026.9.7-3e454637f
+          # -- image pull policy
+          pullPolicy: IfNotPresent
+
+        # -- environment variables.
+        # @default -- See below
+        env:
+          # -- Set the container timezone
+          TZ: UTC
+
+          # Bind IPv4. The image default is GRANIAN_HOST=::, which fails on clusters
+          # without IPv6 (typical k3s).
+          GRANIAN_HOST: "0.0.0.0"
+
+          # Public URL for inbound links (scheme + trailing slash). Leave unset for
+          # port-forward only; set this when enabling ingress.
+          # SEARXNG_BASE_URL: "https://searxng.local/"
+
+          # Required for any shared or exposed instance. Generate with:
+          #   openssl rand -hex 32
+          # Overrides server.secret_key. Do not commit a real value. Prefer a Secret:
+          # SEARXNG_SECRET:
+          #   secretKeyRef:
+          #     name: searxng-secret
+          #     key: SEARXNG_SECRET
+          # SEARXNG_SECRET: ""
+
+          # Bot limiter needs Valkey (SEARXNG_VALKEY_URL). Keep false unless that exists.
+          SEARXNG_LIMITER: "false"
+
+          # Image chown of mounted files. Leave true for the writable cache emptyDir.
+          # The settings ConfigMap is read-only; chown on that mount is ignored.
+          # FORCE_OWNERSHIP: "true"
+
+# -- Configures service settings for the chart. Normally this does not need to be modified.
+# @default -- See values.yaml
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: 8080
+        targetPort: 8080
+
+ingress:
+  # -- Enable and configure ingress settings for the chart under this key.
+  # @default -- See values.yaml
+  main:
+    enabled: false
+    hosts:
+      - host: searxng.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls:
+      - hosts:
+          - searxng.local
+        secretName: tls-searxng-ingress
+
+# -- Chart-owned settings.yml. Mounted at /etc/searxng. secret_key is a non-secret
+# placeholder; override it with SEARXNG_SECRET (openssl rand -hex 32).
+# @default -- See values.yaml
+configMaps:
+  settings:
+    enabled: true
+    data:
+      settings.yml: |
+        # Read the documentation before extending the defaults:
+        # https://docs.searxng.org/admin/settings/
+        use_default_settings: true
+
+        general:
+          instance_name: "SearXNG"
+
+        search:
+          safe_search: 0
+          formats:
+            - html
+
+        server:
+          # Overwritten by SEARXNG_SECRET when that env is set.
+          # Generate a real key with: openssl rand -hex 32
+          secret_key: "insecure-default-set-SEARXNG_SECRET"
+          limiter: false
+          image_proxy: false
+          public_instance: false
+          method: "GET"
+
+        # Limiter / bot protection needs a Valkey URL. Disabled so a default
+        # install does not require an extra service.
+        valkey:
+          url: false
+
+# -- Configure persistence settings for the chart under this key.
+# @default -- See values.yaml
+persistence:
+  # Read-only settings from configMaps.settings. Disable this and enable `config`
+  # if you want the image entrypoint to write settings.yml on a PVC.
+  settings:
+    enabled: true
+    type: configMap
+    identifier: settings
+    globalMounts:
+      - path: /etc/searxng
+        readOnly: true
+  # Favicon / runtime cache. emptyDir is enough to boot; switch to a PVC to keep it.
+  cache:
+    enabled: true
+    type: emptyDir
+    globalMounts:
+      - path: /var/cache/searxng
+  # Optional durable config. Mutually exclusive with persistence.settings (same path).
+  config:
+    enabled: false
+    type: persistentVolumeClaim
+    accessMode: ReadWriteOnce
+    size: 128Mi
+    globalMounts:
+      - path: /etc/searxng
