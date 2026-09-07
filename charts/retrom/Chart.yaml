@@ -4,9 +4,9 @@ name: retrom
 description: A centralized game library/collection management service with a focus on emulation
 home: https://github.com/retsamedoc/helm-charts/tree/main/charts/retrom
 icon: https://raw.githubusercontent.com/JMBeresford/retrom/refs/heads/main/packages/client/icons/icon.png
-version: 2026.2.5
-appVersion: 0.7.14
-kubeVersion: ">=1.25.0-0"
+version: 26.9.0
+appVersion: 0.8.4
+kubeVersion: ">=1.31.0-0"
 
 keywords:
   - retrom
@@ -21,8 +21,8 @@ maintainers:
 
 dependencies:
   - name: common
-    repository: https://bjw-s-labs.github.io/helm-charts
-    version: 4.6.2
+    repository: file://../common
+    version: 26.9.0
 
 annotations:
   catalog.cattle.io/display-name: Retrom
@@ -30,10 +30,12 @@ annotations:
   artifacthub.io/links: |
     - name: Chart Source
       url: https://github.com/retsamedoc/helm-charts/tree/main/charts/retrom
+    - name: Common library
+      url: https://github.com/retsamedoc/helm-charts/tree/main/charts/common
   artifacthub.io/signKey: |
     fingerprint: 40D16531ADC81528315B65664C77EFEB7F669F40
     url: https://retsamedoc.github.io/helm-charts/pgp-public-key.asc
   artifacthub.io/changes: |-
     - kind: changed
       description: |-
-        Migrate templates/values to bjw-s common 4.x controllers API; chart hygiene
+        Migrate to in-repo common 26.9.0 and Retrom 0.8.4; web UI is on port 5101
