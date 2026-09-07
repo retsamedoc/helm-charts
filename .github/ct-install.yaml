@@ -5,13 +5,11 @@ chart-dirs:
   - charts
 # Install only charts that are smoke-testable in k3d.
 # juicepassproxy, esphome, and romm are on in-repo common (file://../common).
-# weatherflow2mqtt remains excluded until its values use the controllers API.
 # retrom stays excluded until migrated off bjw-s common and install
 # CI values are hardened for real app startup.
 excluded-charts:
   - common
   - retrom
-  - weatherflow2mqtt
 chart-repos:
   - bitnami=https://charts.bitnami.com/bitnami
   - library=https://bjw-s-labs.github.io/helm-charts
