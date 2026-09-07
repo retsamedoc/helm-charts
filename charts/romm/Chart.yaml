@@ -4,9 +4,9 @@ name: romm
 description: A beautiful, powerful, self-hosted rom manager and player.
 home: https://github.com/retsamedoc/helm-charts/tree/main/charts/romm
 icon: https://romm.app/_ipx/q_80/images/blocks/logos/romm.svg
-version: 2026.2.5
-appVersion: 3.8.1
-kubeVersion: ">=1.25.0-0"
+version: 26.9.0
+appVersion: 5.2.0
+kubeVersion: ">=1.31.0-0"
 
 keywords:
   - romm
@@ -22,16 +22,12 @@ maintainers:
 
 dependencies:
   - name: common
-    repository: https://bjw-s-labs.github.io/helm-charts
-    version: 4.6.2
+    repository: file://../common
+    version: 26.9.0
   - name: mariadb
     version: 20.4.2
     repository: https://charts.bitnami.com/bitnami
     condition: mariadb.enabled
-  - name: redis
-    version: 20.11.4
-    repository: https://charts.bitnami.com/bitnami
-    condition: redis.enabled
 
 annotations:
   catalog.cattle.io/display-name: RomM
@@ -39,10 +35,12 @@ annotations:
   artifacthub.io/links: |
     - name: Chart Source
       url: https://github.com/retsamedoc/helm-charts/tree/main/charts/romm
+    - name: Common library
+      url: https://github.com/retsamedoc/helm-charts/tree/main/charts/common
   artifacthub.io/signKey: |
     fingerprint: 40D16531ADC81528315B65664C77EFEB7F669F40
     url: https://retsamedoc.github.io/helm-charts/pgp-public-key.asc
   artifacthub.io/changes: |-
     - kind: changed
       description: |-
-        Migrate templates/values to bjw-s common 4.x controllers API; chart hygiene
+        Migrate to in-repo common 26.9.0 and RomM 5.2.0; optional MariaDB, internal Valkey

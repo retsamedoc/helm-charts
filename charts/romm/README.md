@@ -1,6 +1,6 @@
 # romm
 
-![Version: 2026.2.3](https://img.shields.io/badge/Version-2026.2.3-informational?style=flat-square) ![AppVersion: 3.8.1](https://img.shields.io/badge/AppVersion-3.8.1-informational?style=flat-square)
+![Version: 26.9.0](https://img.shields.io/badge/Version-26.9.0-informational?style=flat-square) ![AppVersion: 5.2.0](https://img.shields.io/badge/AppVersion-5.2.0-informational?style=flat-square)
 
 A beautiful, powerful, self-hosted rom manager and player.
 
@@ -13,20 +13,19 @@ A beautiful, powerful, self-hosted rom manager and player.
 
 ## Requirements
 
-Kubernetes: `>=1.16.0-0`
+Kubernetes: `>=1.31.0-0`
 
 ## Dependencies
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://bjw-s-labs.github.io/helm-charts | common | 4.6.2 |
+| file://../common | common | 26.9.0 |
 | https://charts.bitnami.com/bitnami | mariadb | 20.4.2 |
-| https://charts.bitnami.com/bitnami | redis | 20.11.4 |
 
 ## TL;DR
 
 ```console
-helm repo add retsamedoc https://retsamedoc.github.io.com/helm-charts/
+helm repo add retsamedoc https://retsamedoc.github.io/helm-charts/
 helm repo update
 helm install romm retsamedoc/romm
 ```
@@ -52,7 +51,7 @@ The command removes all the Kubernetes components associated with the chart **in
 ## Configuration
 
 Read through the [values.yaml](./values.yaml) file. It has several commented out suggested values.
-Other values may be used from the [values.yaml](https://github.com/bjw-s/helm-charts/tree/main/charts/library/common/values.yaml) from the [common library](https://github.com/bjw-s/helm-charts/tree/main/charts/library/common).
+Other values may be used from the [values.yaml](https://github.com/retsamedoc/helm-charts/tree/main/charts/common/values.yaml) from the [common library](https://github.com/retsamedoc/helm-charts/tree/main/charts/common).
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 
@@ -70,18 +69,42 @@ helm install romm retsamedoc/romm -f values.yaml
 
 ## Custom configuration
 
+RomM 5.2 listens on **port 8080**. Enable the optional MariaDB subchart with `mariadb.enabled=true` (set `mariadb.auth.password` and `mariadb.auth.rootPassword`), or point `DB_HOST`, `DB_USER`, and `DB_PASSWD` at an external MariaDB, MySQL, or Postgres instance.
+
+Valkey runs inside the container. Keep `persistence.redis` mounted at `/redis-data`. Library, assets, config, and resources are separate mounts under `/romm`.
+
+Create the auth secret before install (`openssl rand -hex 32`):
+
+```yaml
+controllers:
+  main:
+    containers:
+      main:
+        env:
+          ROMM_AUTH_SECRET_KEY:
+            secretKeyRef:
+              name: romm-auth
+              key: ROMM_AUTH_SECRET_KEY
+```
+
 ## Values
 
-**Important**: When deploying an application Helm chart you can add more values from the common library chart [here](https://github.com/bjw-s/helm-charts/tree/main/charts/library/common)
+**Important**: When deploying an application Helm chart you can add more values from the common library chart [here](https://github.com/retsamedoc/helm-charts/tree/main/charts/common)
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| env | object | See below | environment variables. |
-| env.TZ | string | `"UTC"` | Set the container timezone |
-| image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
-| image.repository | string | `"ghcr.io/rommapp/romm"` | image repository |
-| image.tag | string | `"3.8@sha256:9a732c9efb4ea70d6cc5818c7d732a4a990fd06b3e1e90600023459942270463"` | image tag The specific digest is for the `amd64` image, but arm compatible images are also available. |
+| controllers.main.containers.main.env | object | See below | environment variables. |
+| controllers.main.containers.main.env.TZ | string | `"UTC"` | Set the container timezone |
+| controllers.main.containers.main.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
+| controllers.main.containers.main.image.repository | string | `"ghcr.io/rommapp/romm"` | image repository |
+| controllers.main.containers.main.image.tag | string | `"5.2.0"` | image tag |
 | ingress.main | object | See values.yaml | Enable and configure ingress settings for the chart under this key. |
+| mariadb.auth.database | string | `"romm"` |  |
+| mariadb.auth.password | string | `""` |  |
+| mariadb.auth.rootPassword | string | `""` |  |
+| mariadb.auth.username | string | `"romm"` |  |
+| mariadb.enabled | bool | `false` |  |
+| mariadb.primary.persistence.size | string | `"8Gi"` |  |
 | persistence | object | See values.yaml | Configure persistence settings for the chart under this key. |
 | service | object | See values.yaml | Configures service settings for the chart. Normally this does not need to be modified. |
 
@@ -90,4 +113,4 @@ helm install romm retsamedoc/romm -f values.yaml
 - Open an [issue](https://github.com/retsamedoc/helm-charts/issues/new/choose)
 
 ----------------------------------------------
-Autogenerated from chart metadata using [helm-docs v1.11.0](https://github.com/norwoodj/helm-docs/releases/v1.11.0)
+Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)

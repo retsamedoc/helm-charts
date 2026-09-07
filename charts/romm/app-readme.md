@@ -1,5 +1,5 @@
 # RomM
 
-Self-hosted ROM manager and player.
+Self-hosted ROM manager and player (image `ghcr.io/rommapp/romm:5.2.0`).
 
-Optional Bitnami MariaDB and Redis subcharts (`mariadb.enabled` / `redis.enabled`). Prefer external DB/Redis for production. Primary targets: k3s + Rancher.
+Optional bundled MariaDB (`mariadb.enabled`), or point `DB_*` at an external database. Valkey is internal (`/redis-data`). Set `ROMM_AUTH_SECRET_KEY` from a Secret. Primary targets: k3s + Rancher.

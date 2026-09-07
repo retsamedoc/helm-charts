@@ -1,24 +1,19 @@
-# Minimal overrides for chart-testing.
-# Subcharts disabled until Bitnami values are wired for a full install.
-mariadb:
-  enabled: false
-redis:
-  enabled: false
+# Minimal overrides for chart-testing install.
+# The app needs a real database; sleep so CI validates render + deploy.
 controllers:
   main:
     containers:
       main:
+        command:
+          - sleep
+          - infinity
         env:
           TZ: UTC
           DB_HOST: localhost
           DB_NAME: romm
           DB_USER: romm
           DB_PASSWD: ci-password
-          REDIS_HOST: localhost
-          REDIS_PASSWORD: ci-password
-ingress:
-  main:
-    enabled: false
+          ROMM_AUTH_SECRET_KEY: ci-secret
 persistence:
   assets:
     enabled: false
@@ -27,4 +22,9 @@ persistence:
   library:
     enabled: false
   resources:
+    enabled: false
+  redis:
+    enabled: false
+ingress:
+  main:
     enabled: false
