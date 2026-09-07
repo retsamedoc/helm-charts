@@ -572,6 +572,50 @@ entries:
     urls:
     - https://github.com/retsamedoc/helm-charts/releases/download/romm-2025.3.0/romm-2025.3.0.tgz
     version: 2025.3.0
+  - annotations:
+      artifacthub.io/changes: |-
+        - kind: changed
+          description: |-
+            Migrate to in-repo common 26.9.0 and RomM 5.2.0; optional MariaDB, internal Valkey
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/retsamedoc/helm-charts/tree/main/charts/romm
+        - name: Common library
+          url: https://github.com/retsamedoc/helm-charts/tree/main/charts/common
+      artifacthub.io/signKey: |
+        fingerprint: 40D16531ADC81528315B65664C77EFEB7F669F40
+        url: https://retsamedoc.github.io/helm-charts/pgp-public-key.asc
+      catalog.cattle.io/display-name: RomM
+      catalog.cattle.io/os: linux
+    apiVersion: v2
+    appVersion: 5.2.0
+    created: "2026-09-07T17:08:03.547624416Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 26.9.0
+    - condition: mariadb.enabled
+      name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      version: 20.4.2
+    description: A beautiful, powerful, self-hosted rom manager and player.
+    digest: 32cf86b720ddfeed329a02d4b384386faf8acab9070adeb617f6c4611c4156aa
+    home: https://github.com/retsamedoc/helm-charts/tree/main/charts/romm
+    icon: https://romm.app/_ipx/q_80/images/blocks/logos/romm.svg
+    keywords:
+    - romm
+    - rom-manager
+    kubeVersion: '>=1.31.0-0'
+    maintainers:
+    - email: retsamedoc@digitalactionsproject.org
+      name: retsamedoc
+    name: romm
+    sources:
+    - https://github.com/rommapp/romm
+    - https://github.com/retsamedoc/helm-charts/tree/main/charts/romm
+    urls:
+    - romm-26.9.0.tgz
+    version: 26.9.0
   weatherflow2mqtt:
   - annotations:
       artifacthub.io/changes: |-
@@ -631,4 +675,4 @@ entries:
     urls:
     - https://github.com/retsamedoc/helm-charts/releases/download/weatherflow2mqtt-0.1.2/weatherflow2mqtt-0.1.2.tgz
     version: 0.1.2
-generated: "2026-09-07T16:29:20.487591028Z"
+generated: "2026-09-07T17:08:03.547665082Z"
