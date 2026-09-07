@@ -35,6 +35,48 @@ entries:
     urls:
     - common-26.9.0.tgz
     version: 26.9.0
+  deluge:
+  - annotations:
+      artifacthub.io/changes: |-
+        - kind: added
+          description: |-
+            Initial chart for Deluge 2.2.0 on in-repo common 26.9.0
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/retsamedoc/helm-charts/tree/main/charts/deluge
+        - name: Common library
+          url: https://github.com/retsamedoc/helm-charts/tree/main/charts/common
+      artifacthub.io/signKey: |
+        fingerprint: 40D16531ADC81528315B65664C77EFEB7F669F40
+        url: https://retsamedoc.github.io/helm-charts/pgp-public-key.asc
+      catalog.cattle.io/display-name: Deluge
+      catalog.cattle.io/os: linux
+    apiVersion: v2
+    appVersion: 2.2.0
+    created: "2026-09-07T18:46:04.868870889Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 26.9.0
+    description: Deluge is a lightweight BitTorrent client
+    digest: e27857b31e8457b4ba9baa1a056f6e5b96617004f8853295eec3a72b2197d4f0
+    home: https://github.com/retsamedoc/helm-charts/tree/main/charts/deluge
+    icon: https://retsamedoc.github.io/helm-charts/logos/deluge.png
+    keywords:
+    - deluge
+    - torrent
+    kubeVersion: '>=1.31.0-0'
+    maintainers:
+    - email: retsamedoc@digitalactionsproject.org
+      name: retsamedoc
+    name: deluge
+    sources:
+    - https://deluge-torrent.org/
+    - https://github.com/linuxserver/docker-deluge
+    - https://github.com/retsamedoc/helm-charts/tree/main/charts/deluge
+    urls:
+    - deluge-26.9.0.tgz
+    version: 26.9.0
   esphome:
   - annotations:
       artifacthub.io/changes: |-
@@ -675,4 +717,4 @@ entries:
     urls:
     - https://github.com/retsamedoc/helm-charts/releases/download/weatherflow2mqtt-0.1.2/weatherflow2mqtt-0.1.2.tgz
     version: 0.1.2
-generated: "2026-09-07T17:08:03.547665082Z"
+generated: "2026-09-07T18:46:05.471622415Z"
