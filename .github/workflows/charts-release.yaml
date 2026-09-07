@@ -141,9 +141,12 @@ jobs:
           set -euo pipefail
           for dir in charts/*/; do
             [[ -f "${dir}/Chart.yaml" ]] || continue
-            # Chart.lock requires locally registered repos for helm dependency build
+            # Chart.lock http(s) repos must be registered; file:// (in-repo) deps need no helm repo add
             while IFS=$'\t' read -r name repo; do
               [[ -n "${name}" && -n "${repo}" && "${repo}" != "null" ]] || continue
+              if [[ "${repo}" == file://* ]]; then
+                continue
+              fi
               helm repo add "${name}" "${repo}" --force-update
             done < <(yq eval -r '.dependencies[]? | [.name, .repository] | @tsv' "${dir}/Chart.yaml")
             helm dependency build "${dir}"
