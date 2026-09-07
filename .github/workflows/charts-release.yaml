@@ -121,10 +121,18 @@ jobs:
           set -euo pipefail
           mkdir -p "${HOME}/.gnupg"
           chmod 700 "${HOME}/.gnupg"
+          # Non-interactive unlock in Actions (no TTY for pinentry)
+          printf '%s\n' 'allow-loopback-pinentry' >> "${HOME}/.gnupg/gpg-agent.conf"
+          printf '%s\n' 'use-agent' 'pinentry-mode loopback' >> "${HOME}/.gnupg/gpg.conf"
           printf '%s\n' "${HELM_GPG_PRIVATE_KEY}" | gpg --batch --import
-          # Helm --sign expects a classic keyring path
-          gpg --batch --yes --export-secret-keys "${HELM_GPG_FINGERPRINT}" > "${HOME}/secring.gpg"
+          # Helm --sign expects a classic keyring path; passphrase unlocks secret material for export
+          gpg --batch --yes \
+            --pinentry-mode loopback \
+            --passphrase "${HELM_GPG_PASSPHRASE}" \
+            --export-secret-keys "${HELM_GPG_FINGERPRINT}" > "${HOME}/secring.gpg"
+          test -s "${HOME}/secring.gpg"
           gpg --armor --export "${HELM_GPG_FINGERPRINT}" > /tmp/pgp-public-key.asc
+          test -s /tmp/pgp-public-key.asc
           echo "GNUPGHOME=${HOME}/.gnupg" >> "$GITHUB_ENV"
           echo "CR_KEYRING_PATH=${HOME}/secring.gpg" >> "$GITHUB_ENV"
 

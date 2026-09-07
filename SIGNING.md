@@ -34,7 +34,9 @@ Charts and `template/chart` use fingerprint `40D16531ADC81528315B65664C77EFEB7F6
 
 The release workflow exports the public key to `https://retsamedoc.github.io/helm-charts/pgp-public-key.asc` on each release.
 
-Release **fails closed** if these secrets are missing.
+Release **fails closed** if these secrets are missing (except `HELM_GPG_PASSPHRASE`, which may be an empty string).
+
+The release workflow exports the secret key with `--pinentry-mode loopback` and `HELM_GPG_PASSPHRASE` so GPG can unlock it in Actions without a TTY (otherwise export fails with `Inappropriate ioctl for device` / `nothing exported`).
 
 ## Verify (HTTP / provenance)
 
