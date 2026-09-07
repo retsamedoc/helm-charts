@@ -30,6 +30,8 @@ Chart `version` uses **`YY.M.r`** (two-digit year, month without zero-padding, r
 
 Only releasable charts under `charts/<name>/`. Development happens on feature/chore branches. Directory name must match `Chart.yaml` `name`.
 
+This repository is for homelab apps that do not publish an official Helm chart. If upstream already ships one, use that chart instead of adding a wrapper here.
+
 Reference application chart: [`charts/juicepassproxy`](charts/juicepassproxy).
 
 Shared library: [`charts/common`](charts/common) (`type: library`, helpers `retsamedoc.common.*`, CalVer). Application charts depend on it; do not install `common` standalone.
@@ -38,6 +40,7 @@ Shared library: [`charts/common`](charts/common) (`type: library`, helpers `rets
 
 Before opening a PR that touches a chart:
 
+- [ ] No official upstream Helm chart exists for this app (use that chart instead)
 - [ ] `Chart.yaml` `name` equals the directory name
 - [ ] `maintainers[].name` is a **GitHub username** (this repo: `retsamedoc`), not a display name — `ct lint` looks the name up on GitHub and fails with 404 otherwise
 - [ ] `version` bumped (`YY.M.r` CalVer) for any releasable change; `appVersion` updated when the app image/tag changes
