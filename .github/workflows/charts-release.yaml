@@ -192,22 +192,58 @@ jobs:
           echo "packaged=${packaged}" >> "$GITHUB_OUTPUT"
           ls -la .cr-release-packages || true
 
-      - name: Run chart-releaser
-        if: steps.package.outputs.packaged != '0'
-        # skip_packaging: we packaged missing version tags above
-        # v1.7.0+ batches packages-with-index pushes (v1.6 races on multi-chart uploads)
-        uses: helm/chart-releaser-action@v1.7.0
-        with:
-          charts_dir: charts
-          packages_with_index: true
-          skip_packaging: true
-          skip_existing: true
+      - name: Upload charts and update index
         env:
           CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CR_KEY: ${{ secrets.HELM_GPG_KEY_NAME }}
-          CR_KEYRING: ${{ env.CR_KEYRING_PATH }}
-          CR_PASSPHRASE_FILE: ${{ env.CR_PASSPHRASE_FILE_PATH }}
-          CR_SIGN: "true"
+        run: |
+          set -euo pipefail
+          # Invoke cr directly. chart-releaser-action with skip_packaging dies
+          # after a successful index push (latest_tag unbound).
+          ver=v1.7.0
+          install="${RUNNER_TOOL_CACHE}/cr/${ver}/$(uname -m)"
+          if [[ ! -x "${install}/cr" ]]; then
+            mkdir -p "${install}"
+            curl -fsSL -o /tmp/cr.tar.gz \
+              "https://github.com/helm/chart-releaser/releases/download/${ver}/chart-releaser_${ver#v}_linux_amd64.tar.gz"
+            tar -xzf /tmp/cr.tar.gz -C "${install}"
+          fi
+          export PATH="${install}:${PATH}"
+
+          mkdir -p .cr-release-packages
+          # Tags already published are skipped above; download those packages so
+          # index/OCI still cover the current Chart.yaml versions (e.g. common).
+          for dir in charts/*/; do
+            [[ -f "${dir}/Chart.yaml" ]] || continue
+            name=$(yq eval '.name' "${dir}/Chart.yaml")
+            version=$(yq eval '.version' "${dir}/Chart.yaml")
+            tgz=".cr-release-packages/${name}-${version}.tgz"
+            if [[ -f "${tgz}" ]]; then
+              continue
+            fi
+            url="https://github.com/${GITHUB_REPOSITORY}/releases/download/${name}-${version}/${name}-${version}.tgz"
+            if curl -fsSL -o "${tgz}" "${url}"; then
+              echo "Downloaded existing release ${name}-${version}"
+              curl -fsSL -o "${tgz}.prov" "${url}.prov" || rm -f "${tgz}.prov"
+            else
+              rm -f "${tgz}"
+            fi
+          done
+
+          shopt -s nullglob
+          packages=(.cr-release-packages/*.tgz)
+          if [[ ${#packages[@]} -eq 0 ]]; then
+            echo "No packages to upload"
+            exit 0
+          fi
+
+          owner="${GITHUB_REPOSITORY_OWNER}"
+          repo="${GITHUB_REPOSITORY#*/}"
+          cr upload -o "${owner}" -r "${repo}" -c "$(git rev-parse HEAD)" \
+            --packages-with-index --push --skip-existing \
+            --package-path .cr-release-packages
+          cr index -o "${owner}" -r "${repo}" --push \
+            --packages-with-index --index-path . \
+            --package-path .cr-release-packages
 
       - name: Publish Pages metadata (pubkey, artifacthub-repo, logos)
         run: |
@@ -263,7 +299,9 @@ jobs:
               continue
             fi
             echo "Pushing ${name}:${version}"
-            helm push "${tgz}" "oci://ghcr.io/${{ github.repository_owner }}/charts"
+            if ! helm push "${tgz}" "oci://ghcr.io/${{ github.repository_owner }}/charts"; then
+              echo "helm push failed for ${name}:${version} (may already exist); continuing"
+            fi
             cosign sign --yes \
               "ghcr.io/${{ github.repository_owner }}/charts/${name}:${version}"
           done
