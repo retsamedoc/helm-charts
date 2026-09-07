@@ -274,6 +274,8 @@ jobs:
         run: |
           set -euo pipefail
           echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u "${{ github.actor }}" --password-stdin
+          # helm registry login does not authenticate cosign's signature push
+          echo "${{ secrets.GITHUB_TOKEN }}" | cosign login ghcr.io -u "${{ github.actor }}" --password-stdin
           shopt -s nullglob
           packages=(.cr-release-packages/*.tgz)
           if [[ ${#packages[@]} -eq 0 ]]; then
