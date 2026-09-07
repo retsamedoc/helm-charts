@@ -13,7 +13,7 @@ Chart `version` uses **`YY.M.r`** (two-digit year, month without zero-padding, r
 - In branch names you may omit `.0`: `feat/common-26.9` means target version `26.9.0`.
 - Bump `r` for each releasable change within the same month; start a new month at `.0`.
 - `appVersion` stays the upstream app’s own version scheme (not CalVer).
-- `ct lint` requires a version increment (`check-version-increment: true`). Every chart is on `YY.M.r`; do not publish a lower SemVer than the chart already on `main`.
+- `ct lint` requires a version increment (`check-version-increment: true`). Do not publish a lower SemVer than the chart already on `main`.
 
 ## Branching
 
@@ -23,7 +23,7 @@ Chart `version` uses **`YY.M.r`** (two-digit year, month without zero-padding, r
 | Repo / CI / docs / tooling | `chore/…` (example: `chore/repo-structure-ci`) |
 
 - Open a pull request into `main`. Do not push incomplete charts to `main`.
-- **Squash-merge** only (configure the GitHub repo accordingly).
+- **Squash-merge** only.
 - Required checks must be green before merge: CI lint, install, pre-commit, and releasenotes (when charts change).
 
 ## What belongs on `main`
@@ -63,8 +63,9 @@ After Renovate bumps a Helm dependency, you can refresh `artifacthub.io/changes`
 
 ## Common library notes
 
-- Helpers are namespaced `retsamedoc.common.*` (see [`charts/common/README.md`](charts/common/README.md)).
-- Top-level NetworkPolicy values key is **`networkPolicy`** (singular). Upstream bjw-s used `networkpolicies`; use `networkPolicy` when migrating.
+- Helpers are namespaced `retsamedoc.common.*` (see [`charts/common/README.md`](charts/common/README.md)). Do not use `bjw-s.common.*`.
+- Application charts depend on this library with `file://../common` at the same CalVer as `charts/common`.
+- Top-level NetworkPolicy values key is **`networkPolicy`** (singular). Do not use `networkpolicies`.
 - Gateway API: values under `route:` and `backendTLSPolicy:`. Install Gateway API CRDs on the cluster (k3s does not ship them). Do not add chart-owned `Gateway` / `GatewayClass` objects here — attach Routes via `parentRefs`.
 - Local unit tests:
 
