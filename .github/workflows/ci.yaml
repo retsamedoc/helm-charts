@@ -76,8 +76,17 @@ jobs:
           set -euo pipefail
           charts=(${{ needs.collect-changes.outputs.addedOrModifiedCharts }})
           for chart in "${charts[@]}"; do
-            if [[ -f "charts/${chart}/Chart.yaml" ]]; then
-              echo "Checking releasenotes for ${chart}"
-              ./.github/scripts/check-releasenotes.sh "charts/${chart}"
+            if [[ ! -f "charts/${chart}/Chart.yaml" ]]; then
+              continue
             fi
+            # Paths under test-chart/ are CI fixtures, not published chart content.
+            # A docs/EOF fix there must not require a common Chart.yaml changelog bump.
+            changed=$(git diff --name-only "origin/${DEFAULT_BRANCH}...HEAD" -- "charts/${chart}/" || true)
+            releasable=$(printf '%s\n' "${changed}" | grep -v '/test-chart/' | grep -v '^$' || true)
+            if [[ -z "${releasable}" ]]; then
+              echo "Skipping releasenotes for ${chart} (only test-chart/ or no files changed)"
+              continue
+            fi
+            echo "Checking releasenotes for ${chart}"
+            ./.github/scripts/check-releasenotes.sh "charts/${chart}"
           done

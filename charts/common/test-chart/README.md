@@ -58,4 +58,3 @@ Alternatively, a YAML file that specifies the values for the above parameters ca
 ```console
 helm install common-test retsamedoc/common-test -f values.yaml
 ```
-
