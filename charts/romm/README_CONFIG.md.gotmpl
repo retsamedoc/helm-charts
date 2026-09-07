@@ -5,4 +5,21 @@
 {{- define "custom.custom.configuration" -}}
 {{ template "custom.custom.configuration.header" . }}
 
+RomM 5.2 listens on **port 8080**. It does not ship a database. Set `DB_HOST`, `DB_USER`, and `DB_PASSWD` to an external MariaDB, MySQL, or Postgres instance (`ROMM_DB_DRIVER` defaults to `mariadb`).
+
+Valkey runs inside the container. Keep `persistence.redis` mounted at `/redis-data`. Library, assets, config, and resources are separate mounts under `/romm`.
+
+Create the auth secret before install (`openssl rand -hex 32`):
+
+```yaml
+controllers:
+  main:
+    containers:
+      main:
+        env:
+          ROMM_AUTH_SECRET_KEY:
+            secretKeyRef:
+              name: romm-auth
+              key: ROMM_AUTH_SECRET_KEY
+```
 {{- end -}}

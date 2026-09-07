@@ -1,12 +1,6 @@
 dependencies:
 - name: common
-  repository: https://bjw-s-labs.github.io/helm-charts
-  version: 4.6.2
-- name: mariadb
-  repository: https://charts.bitnami.com/bitnami
-  version: 20.4.2
-- name: redis
-  repository: https://charts.bitnami.com/bitnami
-  version: 20.11.4
-digest: sha256:4816aa701cf631a5bcc50eb1a62650f19edb4cc0119a83bfe48e5a9e912af69b
-generated: "2026-09-05T21:04:12.185519114-07:00"
+  repository: file://../common
+  version: 26.9.0
+digest: sha256:dfb3b023d38f76685d33840ab399aa1e5ff1cbfff03870fb623b09548c636f14
+generated: "2026-09-07T09:42:49.357123674-07:00"
