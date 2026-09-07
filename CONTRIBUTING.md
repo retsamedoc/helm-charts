@@ -39,6 +39,7 @@ Shared library: [`charts/common`](charts/common) (`type: library`, helpers `rets
 Before opening a PR that touches a chart:
 
 - [ ] `Chart.yaml` `name` equals the directory name
+- [ ] App logo committed at `logos/<chart>.png` and `icon` set to `https://retsamedoc.github.io/helm-charts/logos/<chart>.png` (not an upstream URL)
 - [ ] `maintainers[].name` is a **GitHub username** (this repo: `retsamedoc`), not a display name — `ct lint` looks the name up on GitHub and fails with 404 otherwise
 - [ ] `version` bumped (`YY.M.r` CalVer) for any releasable change; `appVersion` updated when the app image/tag changes
 - [ ] `annotations.artifacthub.io/changes` updated for the new chart version
@@ -50,7 +51,7 @@ Before opening a PR that touches a chart:
 - [ ] `ct lint` passes in CI; `ct install` for charts not listed in `.github/ct-install.yaml` `excluded-charts`
 - [ ] Library changes: `helm unittest charts/common/test-chart` is green (CI runs this when `charts/common/**` changes)
 
-New charts: copy [`template/chart/`](template/chart/) to `charts/<name>/`, replace `CHART_NAME` / `DISPLAY_NAME` placeholders, then open `feat/<name>-<version>`. Do not merge incomplete charts to `main`.
+New charts: copy [`template/chart/`](template/chart/) to `charts/<name>/`, replace `CHART_NAME` / `DISPLAY_NAME` placeholders, commit `logos/<name>.png`, then open `feat/<name>-<version>`. Do not merge incomplete charts to `main`.
 
 After Renovate bumps a Helm dependency, you can refresh `artifacthub.io/changes` with:
 

@@ -1,0 +1,22 @@
+# Minimal overrides for chart-testing install.
+# linuxserver/deluge expects a writable /config; sleep so CI validates
+# render + deploy, not a real torrent client.
+controllers:
+  main:
+    containers:
+      main:
+        command:
+          - sleep
+          - infinity
+        env:
+          TZ: UTC
+          PUID: "1000"
+          PGID: "1000"
+persistence:
+  config:
+    enabled: false
+  downloads:
+    enabled: false
+ingress:
+  main:
+    enabled: false

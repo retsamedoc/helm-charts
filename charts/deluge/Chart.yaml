@@ -1,18 +1,21 @@
 ---
 apiVersion: v2
-name: CHART_NAME
-description: TODO — describe DISPLAY_NAME
-home: https://github.com/retsamedoc/helm-charts/tree/main/charts/CHART_NAME
-icon: https://retsamedoc.github.io/helm-charts/logos/CHART_NAME.png
+name: deluge
+description: Deluge is a lightweight BitTorrent client
+home: https://github.com/retsamedoc/helm-charts/tree/main/charts/deluge
+icon: https://retsamedoc.github.io/helm-charts/logos/deluge.png
 version: 26.9.0
-appVersion: "0.0.0"
+appVersion: 2.2.0
 kubeVersion: ">=1.31.0-0"
 
 keywords:
-  - CHART_NAME
+  - deluge
+  - torrent
 
 sources:
-  - https://github.com/retsamedoc/helm-charts/tree/main/charts/CHART_NAME
+  - https://deluge-torrent.org/
+  - https://github.com/linuxserver/docker-deluge
+  - https://github.com/retsamedoc/helm-charts/tree/main/charts/deluge
 
 maintainers:
   - name: retsamedoc
@@ -24,11 +27,11 @@ dependencies:
     version: 26.9.0
 
 annotations:
-  catalog.cattle.io/display-name: DISPLAY_NAME
+  catalog.cattle.io/display-name: Deluge
   catalog.cattle.io/os: linux
   artifacthub.io/links: |
     - name: Chart Source
-      url: https://github.com/retsamedoc/helm-charts/tree/main/charts/CHART_NAME
+      url: https://github.com/retsamedoc/helm-charts/tree/main/charts/deluge
     - name: Common library
       url: https://github.com/retsamedoc/helm-charts/tree/main/charts/common
   artifacthub.io/signKey: |
@@ -36,4 +39,5 @@ annotations:
     url: https://retsamedoc.github.io/helm-charts/pgp-public-key.asc
   artifacthub.io/changes: |-
     - kind: added
-      description: Initial chart
+      description: |-
+        Initial chart for Deluge 2.2.0 on in-repo common 26.9.0

@@ -1,0 +1,15 @@
+{{- define "custom.custom.configuration.header" -}}
+## Custom configuration
+{{- end -}}
+
+{{- define "custom.custom.configuration" -}}
+{{ template "custom.custom.configuration.header" . }}
+
+The web UI is on port **8112**. Default login is `admin` / `deluge` — change it under Preferences → Interface.
+
+Set the incoming port to **6881** under Preferences → Network and turn off random ports. Otherwise Deluge listens on a port this chart does not publish.
+
+The Service publishes 6881 TCP and UDP, but a ClusterIP is not reachable from peers. On k3s, expose that port with `hostNetwork`, a NodePort, or a LoadBalancer. Ingress only covers the web UI.
+
+Mount downloads at `/downloads` and point Deluge's download location there. Enable `service.main.ports.daemon` (58846) only if you use a remote thin client.
+{{- end -}}
