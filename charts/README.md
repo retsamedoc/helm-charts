@@ -7,4 +7,3 @@
 | [juicepassproxy](juicepassproxy/) | Proxy UDP requests to/from Juicebox EV chargers to MQTT discoverable by Home Assistant |
 | [retrom](retrom/) | A centralized game library/collection management service with a focus on emulation |
 | [romm](romm/) | A beautiful, powerful, self-hosted rom manager and player. |
-| [weatherflow2mqtt](weatherflow2mqtt/) | WeatherFlow to MQTT for Home Assistant |
