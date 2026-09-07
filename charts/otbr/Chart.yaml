@@ -1,0 +1,42 @@
+---
+apiVersion: v2
+name: otbr
+description: OpenThread Border Router (OTBR) connects a Thread network to the host infrastructure network
+home: https://github.com/retsamedoc/helm-charts/tree/main/charts/otbr
+icon: https://retsamedoc.github.io/helm-charts/logos/otbr.png
+version: 26.9.0
+appVersion: "v2026.09.0"
+kubeVersion: ">=1.31.0-0"
+
+keywords:
+  - otbr
+  - openthread
+  - thread
+  - border-router
+
+sources:
+  - https://github.com/openthread/ot-br-posix
+
+maintainers:
+  - name: retsamedoc
+    email: retsamedoc@digitalactionsproject.org
+
+dependencies:
+  - name: common
+    repository: file://../common
+    version: 26.9.0
+
+annotations:
+  catalog.cattle.io/display-name: OpenThread Border Router
+  catalog.cattle.io/os: linux
+  artifacthub.io/links: |
+    - name: Chart Source
+      url: https://github.com/retsamedoc/helm-charts/tree/main/charts/otbr
+    - name: Common library
+      url: https://github.com/retsamedoc/helm-charts/tree/main/charts/common
+  artifacthub.io/signKey: |
+    fingerprint: 40D16531ADC81528315B65664C77EFEB7F669F40
+    url: https://retsamedoc.github.io/helm-charts/pgp-public-key.asc
+  artifacthub.io/changes: |-
+    - kind: added
+      description: Initial chart

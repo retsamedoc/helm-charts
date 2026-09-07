@@ -1,0 +1,13 @@
+{{/* Make sure all variables are set properly */}}
+{{- include "retsamedoc.common.loader.init" . }}
+
+{{- define "app-template.hardcodedValues" -}}
+{{ if not .Values.global.nameOverride }}
+global:
+  nameOverride: "{{ .Release.Name }}"
+{{ end }}
+{{- end -}}
+{{- $_ := mergeOverwrite .Values (include "app-template.hardcodedValues" . | fromYaml) -}}
+
+{{/* Render the templates */}}
+{{- include "retsamedoc.common.loader.generate" . -}}

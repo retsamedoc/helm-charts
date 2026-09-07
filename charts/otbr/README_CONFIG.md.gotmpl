@@ -1,0 +1,49 @@
+{{- define "custom.custom.configuration.header" -}}
+## Custom configuration
+{{- end -}}
+
+{{- define "custom.custom.configuration" -}}
+{{ template "custom.custom.configuration.header" . }}
+
+A default `helm install` renders a Deployment with `hostNetwork: false` and no radio. That is intentional. It will **not** form a Thread network, and it must not be treated as a working border router.
+
+This chart requires one of **ipvlan**, **macvlan**, or **hostNetwork**. OTBR has to create a TUN interface (`wpan0` by default), program firewall/NAT64 rules, and speak mDNS and IPv6 routing on a real infrastructure NIC. ClusterIP or Ingress cannot do that. Traefik can only front the HTTP admin UI. It does not carry Thread routing, router advertisements, or `_meshcop._udp`. Wired Ethernet is fine. Set `OT_INFRA_IF` to that NIC (`eth0`, `enp*`, …). The image default `wlan0` is only a Raspberry Pi default, not a requirement.
+
+### Radio coprocessor
+
+The official image reads `OT_RCP_DEVICE` (default if unset: `spinel+hdlc+uart:///dev/ttyACM0?uart-baudrate=1000000`). Mount that character device with a common-library `hostPath` volume (`hostPathType: CharDevice`) and use the same path in the URL. Many nRF52840 dongles appear as `/dev/ttyACM0`; some Silicon Labs sticks appear as `/dev/ttyUSB0`. Also mount `/dev/net/tun` so `otbr-agent` can create the Thread interface.
+
+The official `docker run` adds `NET_ADMIN`. `NET_RAW` is often required as well for packet/firewall setup. `privileged: true` is a fallback when the runtime will not allow those device nodes. Pin the pod to the node that has the dongle (`nodeSelector` / `nodeName`). Do not run this on every node.
+
+### Backbone interface
+
+The official container uses `OT_INFRA_IF` (image default `wlan0`). Native setup scripts call the same NIC `INFRA_IF_NAME`. Some third-party images use `BACKBONE_INTERFACE`; **this image does not read that variable**. Set `OT_INFRA_IF` to the k3s node's infrastructure interface (often `eth0` on an appliance, or `enp*` / `wlan0` on a PC). It must not be the Thread interface (`OT_THREAD_IF`, default `wpan0`).
+
+### LAN attachment (ipvlan, macvlan, or hostNetwork)
+
+Pick one. This chart does not create the extra CNI network. A stock pod interface is not a substitute.
+
+- **hostNetwork** is the simplest path on k3s and matches the official Docker `--network=host` setup. The pod uses the node's network namespace, so `OT_INFRA_IF` is a real NIC on that node (`eth0` on a wired box). The common library sets `dnsPolicy` to `ClusterFirstWithHostNet` when `hostNetwork` is true. With hostNetwork, the Service is unused for normal access. Browse `http://<node-ip>:8080`. Do not put a LoadBalancer on this Service. k3s ServiceLB would claim host ports and add iptables on the node OTBR is already programming. Leave Traefik out of this path unless you only want a hostname for the UI.
+- **macvlan** or **ipvlan** attaches a secondary interface onto the node's Ethernet (or the LAN bridge) so the pod is a neighbor on that LAN without taking the whole host network namespace. Set `OT_INFRA_IF` to the name of that interface inside the pod. You still need `NET_ADMIN`, `/dev/net/tun`, the radio device, and the same host forwarding/RA sysctls on the parent NIC. Create the attachment with Multus or an equivalent. This chart only consumes it.
+
+The web UI listens on **8080** and the REST API on **8081**. Both default to `127.0.0.1`. Set `OT_WEB_LISTEN_ADDR=0.0.0.0` (and match REST if the topology view should be reachable off-box). The web UI's topology client calls port 8081 on the same host.
+
+Without one of those attachments, `kubectl port-forward` to 8080/8081 can reach a process that happens to be running, but routing, NAT64, and commissioning will not work.
+
+### Persistence
+
+The entrypoint creates `/data/thread` and symlinks `/var/lib/thread` to it. Persist **`/data`** (official docker bind is `/var/lib/otbr:/data`). Without that volume the Thread dataset is lost on restart and the border router forms a new network. A local-path PVC is enough if the pod stays on one node; a `hostPath` of `/var/lib/otbr` matches the upstream docker example.
+
+### Node sysctls (NAT64 / forwarding)
+
+The official docker guide runs `etc/docker/border-router/setup-host` on the **host** before the container. That writes:
+
+- `net.ipv4.ip_forward = 1`
+- `net.ipv6.conf.all.forwarding = 1`
+- `net.ipv6.conf.<OT_INFRA_IF>.accept_ra = 2`
+- `net.ipv6.conf.<OT_INFRA_IF>.accept_ra_rt_info_max_plen = 64`
+
+The common library can render `controllers.main.pod.securityContext.sysctls`, but these are unsafe and interface-specific. k3s rejects them unless the kubelet allows them, and they apply to the host netns when `hostNetwork` is true. Apply `setup-host` (or an equivalent sysctl drop-in) on the node, with `INFRA_IF_NAME` set to the same value as `OT_INFRA_IF`. NAT64 itself is built into the image (`192.168.255.0/24`) and is configured by the entrypoint once `NET_ADMIN` and forwarding are in place.
+
+Keep the chart defaults (sleep is only for `ci/ct-values.yaml`) until those host requirements are met.
+{{- end -}}

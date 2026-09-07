@@ -1,0 +1,16 @@
+# Chart-testing install smoke test only. Not a working border router.
+# Sleep so k3d can deploy without a radio, hostNetwork, or privileged.
+controllers:
+  main:
+    pod:
+      hostNetwork: false
+    containers:
+      main:
+        command:
+          - sleep
+          - infinity
+        securityContext:
+          privileged: false
+persistence:
+  data:
+    enabled: false
