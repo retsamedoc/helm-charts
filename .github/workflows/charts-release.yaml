@@ -157,13 +157,14 @@ jobs:
           done
 
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.6.0
+        # v1.7.0+ batches packages-with-index pushes (v1.6 races on multi-chart uploads)
+        uses: helm/chart-releaser-action@v1.7.0
         with:
           charts_dir: charts
           packages_with_index: true
+          skip_existing: true
         env:
           CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CR_SKIP_EXISTING: "true"
           CR_KEY: ${{ secrets.HELM_GPG_KEY_NAME }}
           CR_KEYRING: ${{ env.CR_KEYRING_PATH }}
           CR_PASSPHRASE_FILE: ${{ env.CR_PASSPHRASE_FILE_PATH }}
