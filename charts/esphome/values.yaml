@@ -1,8 +1,8 @@
 #
 # IMPORTANT NOTE
 #
-# This chart inherits from the common library chart. You can check the default values/options here:
-# https://github.com/bjw-s-labs/helm-charts/blob/main/charts/library/common/values.yaml
+# This chart inherits from our common library chart. You can check the default values/options here:
+# https://github.com/retsamedoc/helm-charts/blob/main/charts/common/values.yaml
 #
 
 controllers:
@@ -15,16 +15,14 @@ controllers:
           # -- image pull policy
           pullPolicy: IfNotPresent
           # -- image tag
-          tag: 2024.3.0
+          tag: 2026.8.2
 
         # -- environment variables.
         # @default -- See below
-        env: {}
-          # ESPHOME_DASHBOARD_USE_PING: true
+        env:
+          # ICMP status checks. Required when the dashboard is not using host networking (typical on k3s).
+          ESPHOME_DASHBOARD_USE_PING: true
           # ESPHOME_DASHBOARD_RELATIVE_URL: "/"
-          # ESPHOME_QUICKWIZARD:
-          # ESPHOME_IS_HASSIO:
-          # DISABLE_HA_AUTHENTICATION:
           # USERNAME:
           # PASSWORD:
 

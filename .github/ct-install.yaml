@@ -4,13 +4,12 @@ helm-extra-args: --timeout 600s
 chart-dirs:
   - charts
 # Install only charts that are smoke-testable in k3d.
-# juicepassproxy is the first app on in-repo common (file://../common).
+# juicepassproxy and esphome are on in-repo common (file://../common).
 # weatherflow2mqtt remains excluded until its values use the controllers API.
-# esphome/retrom/romm stay excluded until migrated off bjw-s common and install
+# retrom/romm stay excluded until migrated off bjw-s common and install
 # CI values are hardened for real app startup.
 excluded-charts:
   - common
-  - esphome
   - retrom
   - romm
   - weatherflow2mqtt

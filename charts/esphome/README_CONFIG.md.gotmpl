@@ -5,5 +5,7 @@
 {{- define "custom.custom.configuration" -}}
 {{ template "custom.custom.configuration.header" . }}
 
-N/A
+The Device Builder dashboard listens on **port 6052**. Enable `persistence.config` so device YAML is stored at `/config`.
+
+Without host networking (the usual case on k3s), set `ESPHOME_DASHBOARD_USE_PING` so the dashboard can report device status. mDNS and first-time serial flashing still need extra cluster setup (hostNetwork, privileged device access, or [web.esphome.io](https://web.esphome.io) for the initial upload).
 {{- end -}}
