@@ -3,8 +3,8 @@ apiVersion: v2
 name: juicepassproxy
 description: Proxy UDP requests to/from Juicebox EV chargers to MQTT discoverable by Home Assistant
 home: https://github.com/retsamedoc/helm-charts/tree/main/charts/juicepassproxy
-icon: https://retsamedoc.github.io/helm-charts/logos/juicepass.png
-version: 26.9.0
+icon: https://retsamedoc.github.io/helm-charts/logos/juicepassproxy.png
+version: 26.9.1
 appVersion: 0.5.1
 kubeVersion: ">=1.31.0-0"
 
@@ -37,4 +37,4 @@ annotations:
   artifacthub.io/changes: |-
     - kind: changed
       description: |-
-        Migrate to in-repo common library 26.9.0 (retsamedoc.common.*)
+        Point the chart icon at logos/juicepassproxy.png

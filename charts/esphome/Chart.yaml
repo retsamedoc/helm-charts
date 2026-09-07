@@ -3,8 +3,8 @@ apiVersion: v2
 name: esphome
 description: ESPHome is a system to control your ESP8266/ESP32 by simple yet powerful configuration files and control them remotely through Home Automation systems
 home: https://github.com/retsamedoc/helm-charts/tree/main/charts/esphome
-icon: https://raw.githubusercontent.com/esphome/esphome-docs/v1.16.2/_static/favicon-256x256.png
-version: 26.9.0
+icon: https://retsamedoc.github.io/helm-charts/logos/esphome.png
+version: 26.9.1
 appVersion: 2026.8.2
 kubeVersion: ">=1.31.0-0"
 
@@ -38,4 +38,4 @@ annotations:
   artifacthub.io/changes: |-
     - kind: changed
       description: |-
-        Migrate to in-repo common library 26.9.0 and ESPHome 2026.8.2
+        Host the chart icon at logos/esphome.png
