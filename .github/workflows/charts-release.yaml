@@ -156,12 +156,51 @@ jobs:
             helm dependency build "${dir}"
           done
 
+      - name: Package unpublished charts
+        id: package
+        env:
+          CR_KEY: ${{ secrets.HELM_GPG_KEY_NAME }}
+          CR_KEYRING: ${{ env.CR_KEYRING_PATH }}
+          CR_PASSPHRASE_FILE: ${{ env.CR_PASSPHRASE_FILE_PATH }}
+        run: |
+          set -euo pipefail
+          # chart-releaser only packages charts changed since the latest tag. After a
+          # partial release, Chart.yaml versions can already be on that tag with no
+          # matching ${name}-${version} tag — package those explicitly.
+          git fetch --tags --force
+          rm -rf .cr-release-packages
+          mkdir -p .cr-release-packages
+          packaged=0
+          for dir in charts/*/; do
+            [[ -f "${dir}/Chart.yaml" ]] || continue
+            name=$(yq eval '.name' "${dir}/Chart.yaml")
+            version=$(yq eval '.version' "${dir}/Chart.yaml")
+            tag="${name}-${version}"
+            if git rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then
+              echo "Skip ${tag} (tag exists)"
+              continue
+            fi
+            echo "Packaging ${tag}"
+            helm package "${dir}" \
+              --destination .cr-release-packages \
+              --sign \
+              --key "${CR_KEY}" \
+              --keyring "${CR_KEYRING}" \
+              --passphrase-file "${CR_PASSPHRASE_FILE}"
+            packaged=$((packaged + 1))
+          done
+          echo "packaged=${packaged}" >> "$GITHUB_OUTPUT"
+          ls -la .cr-release-packages || true
+
       - name: Run chart-releaser
+        if: steps.package.outputs.packaged != '0'
+        # skip_packaging: we packaged missing version tags above
         # v1.7.0+ batches packages-with-index pushes (v1.6 races on multi-chart uploads)
         uses: helm/chart-releaser-action@v1.7.0
         with:
           charts_dir: charts
           packages_with_index: true
+          skip_packaging: true
           skip_existing: true
         env:
           CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -177,6 +216,8 @@ jobs:
           git clone --branch gh-pages --single-branch \
             "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" \
             "${work}"
+          git -C "${work}" config user.name "bishop[bot]"
+          git -C "${work}" config user.email "bishop[bot]@users.noreply.github.com"
           cp /tmp/pgp-public-key.asc "${work}/pgp-public-key.asc"
           cp artifacthub-repo.yml "${work}/artifacthub-repo.yml"
           mkdir -p "${work}/logos"
