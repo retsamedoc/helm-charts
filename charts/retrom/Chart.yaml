@@ -3,7 +3,7 @@ apiVersion: v2
 name: retrom
 description: A centralized game library/collection management service with a focus on emulation
 home: https://github.com/retsamedoc/helm-charts/tree/main/charts/retrom
-icon: https://raw.githubusercontent.com/JMBeresford/retrom/refs/heads/main/packages/client/icons/icon.png
+icon: https://retsamedoc.github.io/helm-charts/logos/retrom.png
 version: 26.9.0
 appVersion: 0.8.4
 kubeVersion: ">=1.31.0-0"
