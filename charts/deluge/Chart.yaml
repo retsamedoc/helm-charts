@@ -1,19 +1,21 @@
 ---
 apiVersion: v2
-name: retrom
-description: A centralized game library/collection management service with a focus on emulation
-home: https://github.com/retsamedoc/helm-charts/tree/main/charts/retrom
-icon: https://retsamedoc.github.io/helm-charts/logos/retrom.png
+name: deluge
+description: Deluge is a lightweight BitTorrent client
+home: https://github.com/retsamedoc/helm-charts/tree/main/charts/deluge
+icon: https://retsamedoc.github.io/helm-charts/logos/deluge.png
 version: 26.9.0
-appVersion: 0.8.4
+appVersion: 2.2.0
 kubeVersion: ">=1.31.0-0"
 
 keywords:
-  - retrom
+  - deluge
+  - torrent
 
 sources:
-  - https://github.com/JMBeresford/retrom
-  - https://github.com/retsamedoc/helm-charts/tree/main/charts/retrom
+  - https://deluge-torrent.org/
+  - https://github.com/linuxserver/docker-deluge
+  - https://github.com/retsamedoc/helm-charts/tree/main/charts/deluge
 
 maintainers:
   - name: retsamedoc
@@ -25,17 +27,17 @@ dependencies:
     version: 26.9.0
 
 annotations:
-  catalog.cattle.io/display-name: Retrom
+  catalog.cattle.io/display-name: Deluge
   catalog.cattle.io/os: linux
   artifacthub.io/links: |
     - name: Chart Source
-      url: https://github.com/retsamedoc/helm-charts/tree/main/charts/retrom
+      url: https://github.com/retsamedoc/helm-charts/tree/main/charts/deluge
     - name: Common library
       url: https://github.com/retsamedoc/helm-charts/tree/main/charts/common
   artifacthub.io/signKey: |
     fingerprint: 40D16531ADC81528315B65664C77EFEB7F669F40
     url: https://retsamedoc.github.io/helm-charts/pgp-public-key.asc
   artifacthub.io/changes: |-
-    - kind: changed
+    - kind: added
       description: |-
-        Migrate to in-repo common 26.9.0 and Retrom 0.8.4; web UI is on port 5101
+        Initial chart for Deluge 2.2.0 on in-repo common 26.9.0

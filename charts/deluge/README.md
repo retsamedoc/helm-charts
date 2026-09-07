@@ -1,15 +1,16 @@
-# retrom
+# deluge
 
-![Version: 26.9.0](https://img.shields.io/badge/Version-26.9.0-informational?style=flat-square) ![AppVersion: 0.8.4](https://img.shields.io/badge/AppVersion-0.8.4-informational?style=flat-square)
+![Version: 26.9.0](https://img.shields.io/badge/Version-26.9.0-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
 
-A centralized game library/collection management service with a focus on emulation
+Deluge is a lightweight BitTorrent client
 
 **This chart is not maintained by the upstream project and any issues with the chart should be raised [here](https://github.com/retsamedoc/helm-charts/issues/new/choose)**
 
 ## Source Code
 
-* <https://github.com/JMBeresford/retrom>
-* <https://github.com/retsamedoc/helm-charts/tree/main/charts/retrom>
+* <https://deluge-torrent.org/>
+* <https://github.com/linuxserver/docker-deluge>
+* <https://github.com/retsamedoc/helm-charts/tree/main/charts/deluge>
 
 ## Requirements
 
@@ -26,23 +27,23 @@ Kubernetes: `>=1.31.0-0`
 ```console
 helm repo add retsamedoc https://retsamedoc.github.io/helm-charts/
 helm repo update
-helm install retrom retsamedoc/retrom
+helm install deluge retsamedoc/deluge
 ```
 
 ## Installing the Chart
 
-To install the chart with the release name `retrom`
+To install the chart with the release name `deluge`
 
 ```console
-helm install retrom retsamedoc/retrom
+helm install deluge retsamedoc/deluge
 ```
 
 ## Uninstalling the Chart
 
-To uninstall the `retrom` deployment
+To uninstall the `deluge` deployment
 
 ```console
-helm uninstall retrom
+helm uninstall deluge
 ```
 
 The command removes all the Kubernetes components associated with the chart **including persistent volumes** and deletes the release.
@@ -55,22 +56,26 @@ Other values may be used from the [values.yaml](https://github.com/retsamedoc/he
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 
 ```console
-helm install retrom \
+helm install deluge \
   --set env.TZ="America/New York" \
-    retsamedoc/retrom
+    retsamedoc/deluge
 ```
 
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart.
 
 ```console
-helm install retrom retsamedoc/retrom -f values.yaml
+helm install deluge retsamedoc/deluge -f values.yaml
 ```
 
 ## Custom configuration
 
-Retrom 0.8 serves the web UI from the service on **port 5101** (`/web`). Port 3000 is no longer used.
+The web UI is on port **8112**. Default login is `admin` / `deluge` — change it under Preferences → Interface.
 
-Mount your ROM library at `/app/library`. `config` and `data` persist the embedded database and settings. On large libraries over k3s `local-path`, set `SKIP_RECURSIVE_CHOWN=true` so startup does not recursively `chown` the library.
+Set the incoming port to **6881** under Preferences → Network and turn off random ports. Otherwise Deluge listens on a port this chart does not publish.
+
+The Service publishes 6881 TCP and UDP, but a ClusterIP is not reachable from peers. On k3s, expose that port with `hostNetwork`, a NodePort, or a LoadBalancer. Ingress only covers the web UI.
+
+Mount downloads at `/downloads` and point Deluge's download location there. Enable `service.main.ports.daemon` (58846) only if you use a remote thin client.
 
 ## Values
 
@@ -79,13 +84,17 @@ Mount your ROM library at `/app/library`. `config` and `data` persist the embedd
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | controllers.main.containers.main.env | object | See below | environment variables. |
+| controllers.main.containers.main.env.DELUGE_LOGLEVEL | string | `"error"` | Log level for deluged (none, info, warning, error, debug) |
+| controllers.main.containers.main.env.PGID | string | `"1000"` | Group ID the application will run as |
+| controllers.main.containers.main.env.PUID | string | `"1000"` | User ID the application will run as |
 | controllers.main.containers.main.env.TZ | string | `"UTC"` | Set the container timezone |
 | controllers.main.containers.main.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
-| controllers.main.containers.main.image.repository | string | `"ghcr.io/jmberesford/retrom-service"` | image repository |
-| controllers.main.containers.main.image.tag | string | `"v0.8.4"` | image tag |
+| controllers.main.containers.main.image.repository | string | `"linuxserver/deluge"` | image repository |
+| controllers.main.containers.main.image.tag | string | `"2.2.0"` | image tag |
+| controllers.main.strategy | string | `"Recreate"` |  |
 | ingress.main | object | See values.yaml | Enable and configure ingress settings for the chart under this key. |
 | persistence | object | See values.yaml | Configure persistence settings for the chart under this key. |
-| service | object | See values.yaml | Configures service settings for the chart. Normally this does not need to be modified. |
+| service | object | See values.yaml | Configures service settings for the chart. |
 
 ## Support
 

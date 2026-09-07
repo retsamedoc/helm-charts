@@ -4,12 +4,10 @@ helm-extra-args: --timeout 600s
 chart-dirs:
   - charts
 # Install only charts that are smoke-testable in k3d.
-# juicepassproxy, esphome, and romm are on in-repo common (file://../common).
-# retrom stays excluded until migrated off bjw-s common and install
-# CI values are hardened for real app startup.
+# Application charts on in-repo common (file://../common) are install-tested.
+# common is a library chart and is not installed standalone.
 excluded-charts:
   - common
-  - retrom
 chart-repos:
   - bitnami=https://charts.bitnami.com/bitnami
   - library=https://bjw-s-labs.github.io/helm-charts

@@ -12,3 +12,4 @@ alwaysApply: true
 - Never commit scratch/audit files (`AUDIT.md`, local notes). Delete them before PR.
 - Prefer `CONTRIBUTING.md` for the full checklist; follow Chart.yaml Cursor rules when editing charts.
 - Do not add a chart when the app already publishes an official Helm chart. This repo is for homelab apps that have none.
+- Every application chart needs `logos/<chart>.png` and an `icon` URL on `retsamedoc.github.io/helm-charts/logos/`. Do not use an upstream icon URL.

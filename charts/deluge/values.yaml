@@ -7,13 +7,14 @@
 
 controllers:
   main:
+    strategy: Recreate
     containers:
       main:
         image:
           # -- image repository
-          repository: ghcr.io/jmberesford/retrom-service
+          repository: linuxserver/deluge
           # -- image tag
-          tag: v0.8.4
+          tag: 2.2.0
           # -- image pull policy
           pullPolicy: IfNotPresent
 
@@ -22,26 +23,32 @@ controllers:
         env:
           # -- Set the container timezone
           TZ: UTC
-          # PUID: 1000
-          # PGID: 1000
-          # Skip recursive chown on large libraries (recommended on k3s local-path).
-          # SKIP_RECURSIVE_CHOWN: "true"
+          # -- User ID the application will run as
+          PUID: "1000"
+          # -- Group ID the application will run as
+          PGID: "1000"
+          # -- Log level for deluged (none, info, warning, error, debug)
+          DELUGE_LOGLEVEL: error
+          # UMASK: "022"
 
-          # Embedded Postgres is the default. Uncomment to use an external database.
-          # POSTGRES_HOST: ""
-          # POSTGRES_PORT: "5432"
-          # POSTGRES_USER: ""
-          # POSTGRES_PASSWORD: ""
-          # POSTGRES_DB: ""
-
-# -- Configures service settings for the chart. Normally this does not need to be modified.
+# -- Configures service settings for the chart.
 # @default -- See values.yaml
 service:
   main:
     controller: main
     ports:
       http:
-        port: 5101
+        port: 8112
+      bittorrent:
+        port: 6881
+        protocol: TCP
+      bittorrent-udp:
+        port: 6881
+        protocol: UDP
+      # Thin-client port for deluged. Enable if you connect a remote client.
+      daemon:
+        enabled: false
+        port: 58846
 
 ingress:
   # -- Enable and configure ingress settings for the chart under this key.
@@ -49,14 +56,14 @@ ingress:
   main:
     enabled: false
     hosts:
-      - host: retrom.local
+      - host: deluge.local
         paths:
           - path: /
             pathType: ImplementationSpecific
     tls:
       - hosts:
-          - retrom.local
-        secretName: tls-retrom-ingress
+          - deluge.local
+        secretName: tls-deluge-ingress
 
 # -- Configure persistence settings for the chart under this key.
 # @default -- See values.yaml
@@ -67,18 +74,11 @@ persistence:
     accessMode: ReadWriteOnce
     size: 1Gi
     globalMounts:
-      - path: /app/config
-  data:
-    enabled: true
-    type: persistentVolumeClaim
-    accessMode: ReadWriteOnce
-    size: 1Gi
-    globalMounts:
-      - path: /app/data
-  library:
+      - path: /config
+  downloads:
     enabled: false
     type: persistentVolumeClaim
     accessMode: ReadWriteOnce
     size: 10Gi
     globalMounts:
-      - path: /app/library
+      - path: /downloads
