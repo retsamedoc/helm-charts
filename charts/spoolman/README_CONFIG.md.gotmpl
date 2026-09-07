@@ -1,0 +1,27 @@
+{{- define "custom.custom.configuration.header" -}}
+## Custom configuration
+{{- end -}}
+
+{{- define "custom.custom.configuration" -}}
+{{ template "custom.custom.configuration.header" . }}
+
+Spoolman listens on **port 8000**. Keep `SPOOLMAN_PORT` at `8000` inside the container. The standalone install’s host port `7912` is only a Docker publish mapping and should not be used here.
+
+### Data directory and SQLite
+
+The SQLite database, backups, and logs live at `/home/app/.local/share/spoolman` (`SPOOLMAN_DIR_DATA`). `persistence.data` mounts a 1Gi ReadWriteOnce PVC there and is enabled by default. The controller uses `strategy: Recreate` so a single RWO volume can be reattached on upgrade.
+
+SQLite is the default and needs no extra settings. Do **not** set `SPOOLMAN_DB_NAME` while using SQLite.
+
+### External database
+
+Postgres, MySQL, or CockroachDB are optional and are **not** bundled. Uncomment `SPOOLMAN_DB_TYPE` and the related `SPOOLMAN_DB_*` values and point them at a database you already run. Put the password in a Secret (`SPOOLMAN_DB_PASSWORD.secretKeyRef`). With an external database the PVC is only needed if you still want local logs or backups.
+
+### Ingress
+
+`ingress.main` is disabled by default with placeholder host `spoolman.local`. Enable it and set a real host (and TLS secret) for Traefik on k3s, or use `kubectl port-forward` to port 8000.
+
+### Security context
+
+The image’s `app` user is uid/gid **1000**. This chart sets pod and container `securityContext` to that uid and `fsGroup: 1000` so the data volume is writable. The entrypoint can remap `PUID`/`PGID` only when it starts as root; leave those unset unless you also clear `runAsNonRoot` / `runAsUser`.
+{{- end -}}

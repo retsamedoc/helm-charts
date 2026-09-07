@@ -1,0 +1,17 @@
+# Minimal overrides for chart-testing install.
+# SQLite writes to the image data dir; skip the PVC so CI does not need a
+# default StorageClass. The process should stay up without extra services.
+controllers:
+  main:
+    containers:
+      main:
+        env:
+          TZ: UTC
+          SPOOLMAN_HOST: 0.0.0.0
+          SPOOLMAN_PORT: "8000"
+persistence:
+  data:
+    enabled: false
+ingress:
+  main:
+    enabled: false

@@ -1,0 +1,103 @@
+#
+# IMPORTANT NOTE
+#
+# This chart inherits from our common library chart. You can check the default values/options here:
+# https://github.com/retsamedoc/helm-charts/blob/main/charts/common/values.yaml
+#
+
+controllers:
+  main:
+    # Recreate because the data volume is ReadWriteOnce.
+    strategy: Recreate
+
+    # The image has no USER and its entrypoint starts as root only to remap
+    # PUID/PGID, then drops to uid 1000 via gosu. The app itself must not run as
+    # root (PUID 0 is rejected). Run as the image's app user and let the volume
+    # be group-writable via fsGroup. Do not change PUID unless you also start
+    # the container as root so usermod can run.
+    pod:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        fsGroup: 1000
+
+    containers:
+      main:
+        image:
+          # -- image repository
+          repository: ghcr.io/donkie/spoolman
+          # -- image tag
+          tag: "0.26.1"
+          # -- image pull policy
+          pullPolicy: IfNotPresent
+
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+
+        # -- environment variables.
+        # @default -- See below
+        env:
+          # -- Set the container timezone
+          TZ: UTC
+          # Listen on all interfaces. Do not set SPOOLMAN_PORT to the standalone
+          # install's host port (7912); the container listens on 8000.
+          SPOOLMAN_HOST: 0.0.0.0
+          SPOOLMAN_PORT: "8000"
+          # SQLite file and logs. Must match persistence.data.
+          SPOOLMAN_DIR_DATA: /home/app/.local/share/spoolman
+
+          # SQLite is the default and needs no extra settings. Do not set
+          # SPOOLMAN_DB_NAME with SQLite or Spoolman will fail to start.
+          # Optional external Postgres, MySQL, or CockroachDB (no database
+          # subchart; point these at a server you already run):
+          # SPOOLMAN_DB_TYPE: postgres
+          # SPOOLMAN_DB_HOST: ""
+          # SPOOLMAN_DB_PORT: "5432"
+          # SPOOLMAN_DB_NAME: spoolman
+          # SPOOLMAN_DB_USERNAME: ""
+          # Prefer a Secret for the password:
+          # SPOOLMAN_DB_PASSWORD:
+          #   secretKeyRef:
+          #     name: spoolman-db
+          #     key: password
+          # SPOOLMAN_DB_PASSWORD: ""
+          # SPOOLMAN_DB_QUERY: ""
+
+# -- Configures service settings for the chart. Normally this does not need to be modified.
+# @default -- See values.yaml
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: 8000
+
+ingress:
+  # -- Enable and configure ingress settings for the chart under this key.
+  # @default -- See values.yaml
+  main:
+    enabled: false
+    hosts:
+      - host: spoolman.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls:
+      - hosts:
+          - spoolman.local
+        secretName: tls-spoolman-ingress
+
+# -- Configure persistence settings for the chart under this key.
+# @default -- See values.yaml
+persistence:
+  data:
+    enabled: true
+    type: persistentVolumeClaim
+    accessMode: ReadWriteOnce
+    size: 1Gi
+    globalMounts:
+      - path: /home/app/.local/share/spoolman
