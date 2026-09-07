@@ -36,7 +36,7 @@ The release workflow exports the public key to `https://retsamedoc.github.io/hel
 
 Release **fails closed** if these secrets are missing (except `HELM_GPG_PASSPHRASE`, which may be an empty string).
 
-The release workflow exports the secret key with `--pinentry-mode loopback` and `HELM_GPG_PASSPHRASE` so GPG can unlock it in Actions without a TTY (otherwise export fails with `Inappropriate ioctl for device` / `nothing exported`).
+The release workflow exports the secret key with `--pinentry-mode loopback` and writes the passphrase to a file for chart-releaser (`CR_PASSPHRASE_FILE`). Using `CR_PASSPHRASE` alone is ignored by chart-releaser and causes `inappropriate ioctl for device` when packaging.
 
 ## Verify (HTTP / provenance)
 

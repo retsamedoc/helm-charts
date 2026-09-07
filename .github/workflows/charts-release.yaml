@@ -133,8 +133,12 @@ jobs:
           test -s "${HOME}/secring.gpg"
           gpg --armor --export "${HELM_GPG_FINGERPRINT}" > /tmp/pgp-public-key.asc
           test -s /tmp/pgp-public-key.asc
+          # chart-releaser / helm package --sign read CR_PASSPHRASE_FILE (not CR_PASSPHRASE)
+          printf '%s' "${HELM_GPG_PASSPHRASE}" > "${HOME}/gpg-passphrase"
+          chmod 600 "${HOME}/gpg-passphrase"
           echo "GNUPGHOME=${HOME}/.gnupg" >> "$GITHUB_ENV"
           echo "CR_KEYRING_PATH=${HOME}/secring.gpg" >> "$GITHUB_ENV"
+          echo "CR_PASSPHRASE_FILE_PATH=${HOME}/gpg-passphrase" >> "$GITHUB_ENV"
 
       - name: Build chart dependencies
         run: |
@@ -162,7 +166,7 @@ jobs:
           CR_SKIP_EXISTING: "true"
           CR_KEY: ${{ secrets.HELM_GPG_KEY_NAME }}
           CR_KEYRING: ${{ env.CR_KEYRING_PATH }}
-          CR_PASSPHRASE: ${{ secrets.HELM_GPG_PASSPHRASE }}
+          CR_PASSPHRASE_FILE: ${{ env.CR_PASSPHRASE_FILE_PATH }}
           CR_SIGN: "true"
 
       - name: Publish Pages metadata (pubkey, artifacthub-repo, logos)
