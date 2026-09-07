@@ -1,8 +1,13 @@
-# Minimal overrides for chart-testing
+# Minimal overrides for chart-testing install.
+# The dashboard expects a writable /config and may stay up only with persistence;
+# sleep so CI validates render + deploy, not device discovery.
 controllers:
   main:
     containers:
       main:
+        command:
+          - sleep
+          - infinity
         env:
           ESPHOME_DASHBOARD_USE_PING: true
 persistence:
