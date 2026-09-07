@@ -12,7 +12,7 @@ alwaysApply: false
 - **`artifacthub.io/signKey`**: always present (fingerprint + Pages pubkey URL). See SIGNING.md.
 - **Rancher**: `catalog.cattle.io/display-name` and `catalog.cattle.io/os: linux`.
 - **Library charts** (`type: library`): also set `catalog.cattle.io/hidden: "true"`.
-- **`icon`**: prefer `https://retsamedoc.github.io/helm-charts/logos/<file>` with the file under `logos/`.
+- **`icon`**: `https://retsamedoc.github.io/helm-charts/logos/<chart>.png` and commit the file under `logos/`. Do not point `icon` at an upstream URL. Every application chart needs its own logo before the PR.
 - **`name`**: must equal the directory name under `charts/`.
 
 ```yaml

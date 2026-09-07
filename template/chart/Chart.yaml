@@ -3,6 +3,7 @@ apiVersion: v2
 name: CHART_NAME
 description: TODO — describe DISPLAY_NAME
 home: https://github.com/retsamedoc/helm-charts/tree/main/charts/CHART_NAME
+icon: https://retsamedoc.github.io/helm-charts/logos/CHART_NAME.png
 version: 26.9.0
 appVersion: "0.0.0"
 kubeVersion: ">=1.31.0-0"
