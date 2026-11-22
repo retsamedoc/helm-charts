@@ -1,0 +1,126 @@
+#
+# IMPORTANT NOTE
+#
+# This chart inherits from our common library chart. You can check the default values/options here:
+# https://github.com/retsamedoc/helm-charts/blob/main/charts/common/values.yaml
+#
+
+# -- Harmony Hub running Melodious. Must be reachable from cluster nodes on the LAN.
+# @default -- See below
+hub:
+  # -- Hub IP or hostname (no scheme/port). Required for a working proxy.
+  host: ""
+  # -- Hub web UI port (Melodious default is 8080).
+  port: 8080
+
+controllers:
+  main:
+    strategy: Recreate
+
+    containers:
+      main:
+        image:
+          # -- image repository
+          repository: nginx
+          # -- image tag
+          # @default -- Chart.yaml appVersion
+          tag: 1.27-alpine
+          # -- image pull policy
+          pullPolicy: IfNotPresent
+
+        # -- environment variables.
+        # @default -- See below
+        env:
+          # -- Set the container timezone
+          TZ: UTC
+
+# -- nginx reverse-proxy config. Helm-templated; uses hub.host / hub.port.
+# @default -- See values.yaml
+configMaps:
+  nginx:
+    enabled: true
+    data:
+      nginx.conf: |
+        worker_processes auto;
+        error_log /dev/stderr notice;
+        pid /tmp/nginx.pid;
+
+        events {
+          worker_connections 256;
+        }
+
+        http {
+          access_log /dev/stdout;
+          server_tokens off;
+          client_body_temp_path /tmp/client_body;
+          proxy_temp_path /tmp/proxy;
+          fastcgi_temp_path /tmp/fastcgi;
+          uwsgi_temp_path /tmp/uwsgi;
+          scgi_temp_path /tmp/scgi;
+
+          {{- $hubHost := required "Set hub.host to your Harmony Hub LAN IP or hostname" .Values.hub.host }}
+          {{- $upstreamHost := $hubHost }}
+          {{- if and (contains ":" $hubHost) (not (hasPrefix "[" $hubHost)) }}
+            {{- $upstreamHost = printf "[%s]" $hubHost }}
+          {{- end }}
+          {{- $upstream := printf "http://%s:%v" $upstreamHost .Values.hub.port }}
+
+          map $http_upgrade $connection_upgrade {
+            default upgrade;
+            ''      close;
+          }
+
+          server {
+            listen 8080;
+            server_name _;
+            client_max_body_size 32m;
+
+            location = /healthz {
+              default_type text/plain;
+              return 200 'ok\n';
+            }
+
+            location / {
+              proxy_pass {{ $upstream }};
+              proxy_http_version 1.1;
+              proxy_set_header Host $proxy_host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_set_header Authorization $http_authorization;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection $connection_upgrade;
+              proxy_buffering off;
+              proxy_request_buffering off;
+              proxy_connect_timeout 5s;
+              proxy_send_timeout 300s;
+              proxy_read_timeout 300s;
+            }
+          }
+        }
+
+persistence:
+  nginx:
+    enabled: true
+    type: configMap
+    identifier: nginx
+    defaultMode: 0444
+    globalMounts:
+      - path: /etc/nginx/nginx.conf
+        subPath: nginx.conf
+        readOnly: true
+
+# -- Configures service settings for the chart. Normally this does not need to be modified.
+# @default -- See values.yaml
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: 8080
+
+ingress:
+  # -- Enable and configure ingress settings for the chart under this key.
+  # @default -- See values.yaml
+  main:
+    enabled: false

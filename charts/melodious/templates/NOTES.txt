@@ -1,0 +1,14 @@
+Melodious chart proxies to the Harmony Hub web UI at {{ .Values.hub.host | default "<unset>" }}:{{ .Values.hub.port }}.
+
+{{- if not .Values.hub.host }}
+
+WARNING: hub.host is empty. Set hub.host to your hub's LAN IP or hostname before use.
+{{- end }}
+
+1. Get the application URL by running these commands:
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  echo "Visit via: kubectl -n {{ .Release.Namespace }} port-forward $POD_NAME 8080:8080"
+  echo "Open http://127.0.0.1:8080"
+
+Or enable ingress.main / a Gateway API route and open that hostname.
+Health check (proxy only): http://127.0.0.1:8080/healthz
