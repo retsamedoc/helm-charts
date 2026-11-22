@@ -1,0 +1,18 @@
+# Minimal overrides for chart-testing install.
+# No real Harmony Hub in CI; keep a sleeping container so install validates
+# render + deploy. hub.host must still be set so the ConfigMap templates.
+hub:
+  host: "127.0.0.1"
+  port: 8080
+controllers:
+  main:
+    containers:
+      main:
+        command:
+          - sleep
+          - infinity
+        env:
+          TZ: UTC
+ingress:
+  main:
+    enabled: false

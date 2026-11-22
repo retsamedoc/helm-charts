@@ -1,0 +1,21 @@
+{{- define "custom.custom.configuration.header" -}}
+## Custom configuration
+{{- end -}}
+
+{{- define "custom.custom.configuration" -}}
+{{ template "custom.custom.configuration.header" . }}
+
+Melodious’s dashboard runs **on the Harmony Hub** (`hub.host`:`hub.port`, default port 8080). This chart only runs an in-cluster nginx reverse proxy so Traefik (Ingress) or Gateway API can front that LAN device:
+
+`Client → Traefik → Service → nginx Pod → Hub`
+
+1. Install Melodious on the hub with the [upstream Setup Wizard / CLI / Unraid Docker](https://github.com/schlambos/harmony-hub-control) (out of band).
+2. Set `hub.host` to a LAN IP or hostname reachable from your k3s nodes.
+3. Enable `ingress.main` (or a common-library `route`) toward this chart’s Service on port 8080.
+
+Keep the hub on a trusted network. The hub UI is plain HTTP; enable Melodious **System → Web UI sign-in** if untrusted clients can reach the Ingress. Do not expose hub SSH or the hub’s own `:8080` to the internet.
+
+### Advanced: Traefik without a proxy Pod
+
+You can point Traefik at the hub with a selector-less Service plus Endpoints / EndpointSlice via common [`rawResources`](https://github.com/retsamedoc/helm-charts/tree/main/charts/common). Prefer this chart’s nginx proxy by default — Traefik versions differ on Endpoints vs EndpointSlice, and ExternalName needs DNS rather than a raw IP.
+{{- end -}}
